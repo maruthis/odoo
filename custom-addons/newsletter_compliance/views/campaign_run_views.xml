@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_campaign_run_list" model="ir.ui.view">
+        <field name="name">newsletter.campaign.run.list</field>
+        <field name="model">newsletter.campaign.run</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0"
+                  decoration-success="state in ('passed', 'passed_with_warning', 'completed', 'archived')"
+                  decoration-danger="state in ('failed', 'invalidated', 'cancelled', 'completed_with_errors')"
+                  decoration-info="state in ('evaluating', 'queued', 'sending', 'partially_completed')">
+                <field name="reference"/>
+                <field name="campaign_compliance_id"/>
+                <field name="mailing_id"/>
+                <field name="state"/>
+                <field name="targeted_count"/>
+                <field name="eligible_count"/>
+                <field name="excluded_count"/>
+                <field name="sent_count"/>
+                <field name="failed_count"/>
+                <field name="frozen"/>
+                <field name="preflight_started_at"/>
+                <field name="preflight_started_by_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_run_form" model="ir.ui.view">
+        <field name="name">newsletter.campaign.run.form</field>
+        <field name="model">newsletter.campaign.run</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <header>
+                    <button name="action_start_execution" type="object"
+                            string="Send" class="btn-primary"
+                            invisible="state != 'passed' or not frozen"
+                            groups="newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"/>
+                    <button name="%(newsletter_compliance.action_newsletter_suspend_execution_wizard)d"
+                            type="action" string="Suspend" class="btn-secondary"
+                            invisible="state not in ('queued', 'sending', 'partially_completed')"
+                            groups="newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"
+                            context="{'default_campaign_run_id': id}"/>
+                    <button name="%(newsletter_compliance.action_newsletter_resume_execution_wizard)d"
+                            type="action" string="Resume" class="btn-primary"
+                            invisible="state != 'suspended'"
+                            groups="newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"
+                            context="{'default_campaign_run_id': id}"/>
+                    <button name="%(newsletter_compliance.action_newsletter_cancel_execution_wizard)d"
+                            type="action" string="Cancel Execution" class="btn-secondary"
+                            invisible="state not in ('queued', 'sending', 'partially_completed', 'suspended')"
+                            groups="newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"
+                            context="{'default_campaign_run_id': id}"/>
+                    <button name="action_retry_failed" type="object"
+                            string="Retry Failed" class="btn-secondary"
+                            invisible="failed_count == 0"
+                            groups="newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"/>
+                    <button name="action_verify_integrity" type="object"
+                            string="Verify Integrity" class="btn-secondary"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="passed,queued,sending,partially_completed,completed,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_eligible" type="object"
+                                class="oe_stat_button" icon="fa-check-circle">
+                            <field name="eligible_count" widget="statinfo" string="Eligible"/>
+                        </button>
+                        <button name="action_view_excluded" type="object"
+                                class="oe_stat_button" icon="fa-ban">
+                            <field name="excluded_count" widget="statinfo" string="Excluded"/>
+                        </button>
+                        <button name="action_view_events" type="object"
+                                class="oe_stat_button" icon="fa-list-alt"
+                                invisible="not event_ids">
+                            <field name="event_ids" widget="statinfo" string="Events"/>
+                        </button>
+                        <button name="action_view_archive" type="object"
+                                class="oe_stat_button" icon="fa-archive"
+                                invisible="not archive_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Archive</span>
+                            </div>
+                        </button>
+                        <button name="action_view_outcome" type="object"
+                                class="oe_stat_button" icon="fa-line-chart"
+                                invisible="not current_outcome_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Outcome</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="mailing_id"/>
+                            <field name="campaign_compliance_id"/>
+                            <field name="governance_version"/>
+                            <field name="state"/>
+                            <field name="frozen"/>
+                            <field name="frozen_at"/>
+                        </group>
+                        <group>
+                            <field name="preflight_started_at"/>
+                            <field name="preflight_started_by_id"/>
+                            <field name="preflight_completed_at"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Failure / Cancellation / Suspension"
+                           invisible="not failure_reason and not cancellation_reason and not suspension_reason">
+                        <field name="failure_reason" invisible="not failure_reason"/>
+                        <field name="cancelled_by_id" invisible="not cancellation_reason"/>
+                        <field name="cancelled_at" invisible="not cancellation_reason"/>
+                        <field name="cancellation_reason" invisible="not cancellation_reason"/>
+                        <field name="suspended_by_id" invisible="not suspension_reason"/>
+                        <field name="suspended_at" invisible="not suspension_reason"/>
+                        <field name="suspension_reason" invisible="not suspension_reason"/>
+                    </group>
+                    <notebook>
+                        <page string="Preflight Counts">
+                            <group>
+                                <group>
+                                    <field name="targeted_count"/>
+                                    <field name="eligible_count"/>
+                                    <field name="excluded_count"/>
+                                    <field name="duplicate_count"/>
+                                </group>
+                                <group>
+                                    <field name="missing_consent_count"/>
+                                    <field name="withdrawn_consent_count"/>
+                                    <field name="expired_consent_count"/>
+                                    <field name="global_blacklist_count"/>
+                                    <field name="suppression_count"/>
+                                    <field name="invalid_email_count"/>
+                                    <field name="already_sent_count"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Execution">
+                            <group>
+                                <group>
+                                    <field name="execution_started_at"/>
+                                    <field name="execution_started_by_id"/>
+                                    <field name="execution_completed_at"/>
+                                    <field name="execution_batch_size"/>
+                                    <field name="maximum_retry_count"/>
+                                    <field name="last_reconciled_at"/>
+                                </group>
+                                <group>
+                                    <field name="queued_count"/>
+                                    <field name="processing_count"/>
+                                    <field name="sent_count"/>
+                                    <field name="retry_pending_count"/>
+                                    <field name="failed_count"/>
+                                    <field name="blocked_at_dispatch_count"/>
+                                    <field name="cancelled_count"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Retention">
+                            <group>
+                                <field name="retention_policy_id"/>
+                                <field name="retain_until"/>
+                                <field name="legal_hold"/>
+                            </group>
+                        </page>
+                        <page string="Integrity">
+                            <group>
+                                <field name="input_hash"/>
+                                <field name="result_hash"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_run_search" model="ir.ui.view">
+        <field name="name">newsletter.campaign.run.search</field>
+        <field name="model">newsletter.campaign.run</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="campaign_compliance_id"/>
+                <field name="mailing_id"/>
+                <filter name="filter_passed" string="Passed" domain="[('state', 'in', ['passed', 'passed_with_warning'])]"/>
+                <filter name="filter_failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                <filter name="filter_invalidated" string="Invalidated" domain="[('state', '=', 'invalidated')]"/>
+                <filter name="filter_active" string="Active Runs" domain="[('state', 'in', ['queued', 'sending', 'partially_completed'])]"/>
+                <filter name="filter_completed" string="Completed" domain="[('state', 'in', ['completed', 'completed_with_errors', 'archived'])]"/>
+                <group>
+                    <filter name="group_by_mailing" string="Campaign" context="{'group_by': 'mailing_id'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_campaign_run" model="ir.actions.act_window">
+        <field name="name">Campaign Runs</field>
+        <field name="res_model">newsletter.campaign.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_campaign_run_search"/>
+    </record>
+
+    <record id="action_newsletter_campaign_run_active" model="ir.actions.act_window">
+        <field name="name">Active Runs</field>
+        <field name="res_model">newsletter.campaign.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', 'in', ['queued', 'sending', 'partially_completed'])]</field>
+        <field name="search_view_id" ref="view_newsletter_campaign_run_search"/>
+    </record>
+
+    <record id="action_newsletter_campaign_run_completed" model="ir.actions.act_window">
+        <field name="name">Completed Runs</field>
+        <field name="res_model">newsletter.campaign.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', 'in', ['completed', 'completed_with_errors', 'archived'])]</field>
+        <field name="search_view_id" ref="view_newsletter_campaign_run_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- res.groups.privilege records so these roles show up in the user
+         form's "Access Rights" tab without needing developer mode - a
+         group with no privilege_id is only rendered there under "Extra
+         Rights", which the tab hides unless odoo.debug is truthy. Ladders
+         (implied_ids chains) share one privilege and render as a single
+         escalating dropdown; independent, non-implying roles each get
+         their own singleton privilege so they render as separate
+         on/off toggles (the same pattern account.py uses for
+         group_validate_bank_account). -->
+
+    <record id="res_groups_privilege_newsletter_compliance" model="res.groups.privilege">
+        <field name="name">Compliance Level</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+    </record>
+
+    <record id="res_groups_privilege_newsletter_operations" model="res.groups.privilege">
+        <field name="name">Operations Level</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+    </record>
+
+    <record id="res_groups_privilege_newsletter_author" model="res.groups.privilege">
+        <field name="name">Author</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+    </record>
+
+    <record id="res_groups_privilege_newsletter_content_approver" model="res.groups.privilege">
+        <field name="name">Content Approver</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+    </record>
+
+    <record id="res_groups_privilege_newsletter_auditor" model="res.groups.privilege">
+        <field name="name">Compliance Audit Reviewer</field>
+        <field name="sequence">50</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+    </record>
+
+    <record id="res_groups_privilege_newsletter_privacy_officer" model="res.groups.privilege">
+        <field name="name">Privacy Officer</field>
+        <field name="sequence">60</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+    </record>
+
+    <record id="res_groups_privilege_newsletter_legal_hold_admin" model="res.groups.privilege">
+        <field name="name">Legal Hold Administrator</field>
+        <field name="sequence">70</field>
+        <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
+    </record>
+
+    <!-- Base group. Not exposed as its own toggle (no privilege_id) -
+         every other Newsletter Compliance group implies it, the same way
+         base.group_user is never shown as a standalone checkbox. -->
+    <record id="group_newsletter_compliance_user" model="res.groups">
+        <field name="name">Newsletter User</field>
+    </record>
+
+    <!-- Compliance Level ladder: Administrator implies Reviewer implies
+         Newsletter User. -->
+    <record id="group_newsletter_compliance_reviewer" model="res.groups">
+        <field name="name">Compliance Reviewer</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_compliance"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_user'))]"/>
+    </record>
+
+    <record id="group_newsletter_compliance_admin" model="res.groups">
+        <field name="name">Compliance Administrator</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_compliance"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_reviewer'))]"/>
+    </record>
+
+    <record id="group_newsletter_compliance_auditor" model="res.groups">
+        <field name="name">Compliance Audit Reviewer</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_auditor"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_user'))]"/>
+    </record>
+
+    <!-- R2: Campaign Governance roles. These are siblings under
+         Newsletter User and deliberately do NOT imply each other -
+         the same person may hold multiple, but the roles stay
+         logically independent (separation of duties). -->
+    <record id="group_newsletter_author" model="res.groups">
+        <field name="name">Newsletter Author</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_author"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_user'))]"/>
+    </record>
+
+    <record id="group_newsletter_content_approver" model="res.groups">
+        <field name="name">Content Approver</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_content_approver"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_user'))]"/>
+    </record>
+
+    <!-- Operations Level ladder: Operations Administrator implies
+         Campaign Operator implies Newsletter User. -->
+    <record id="group_newsletter_campaign_operator" model="res.groups">
+        <field name="name">Campaign Operator</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_operations"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_user'))]"/>
+    </record>
+
+    <!-- R6: Privacy/retention roles. Siblings under Newsletter User, like
+         the R2 roles - a Legal Hold Administrator does not need general
+         Compliance Reviewer/Admin rights, and vice versa. -->
+    <record id="group_newsletter_privacy_officer" model="res.groups">
+        <field name="name">Privacy Officer</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_privacy_officer"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_user'))]"/>
+    </record>
+
+    <record id="group_newsletter_legal_hold_admin" model="res.groups">
+        <field name="name">Legal Hold Administrator</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_legal_hold_admin"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_compliance_user'))]"/>
+    </record>
+
+    <!-- Operations Administrator (blueprint §28): configures delivery
+         providers/dispatch settings and runs execution, without inheriting
+         Compliance Administrator's content/compliance approval authority
+         or R6's privacy/legal-hold powers - a deliberately narrower
+         operations-only role. -->
+    <record id="group_newsletter_operations_admin" model="res.groups">
+        <field name="name">Operations Administrator</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_newsletter_operations"/>
+        <field name="implied_ids" eval="[(4, ref('group_newsletter_campaign_operator'))]"/>
+    </record>
+</odoo>

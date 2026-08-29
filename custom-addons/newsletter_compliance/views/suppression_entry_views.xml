@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_suppression_entry_list" model="ir.ui.view">
+        <field name="name">newsletter.suppression.entry.list</field>
+        <field name="model">newsletter.suppression.entry</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="not active">
+                <field name="reference"/>
+                <field name="email_normalized"/>
+                <field name="partner_id"/>
+                <field name="scope"/>
+                <field name="purpose_id"/>
+                <field name="mailing_list_id"/>
+                <field name="reason_id"/>
+                <field name="effective_from"/>
+                <field name="effective_until"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_suppression_entry_form" model="ir.ui.view">
+        <field name="name">newsletter.suppression.entry.form</field>
+        <field name="model">newsletter.suppression.entry</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(newsletter_compliance.action_newsletter_reinstate_suppression_wizard)d"
+                            string="Reinstate"
+                            type="action"
+                            class="btn-primary"
+                            invisible="not active"
+                            groups="newsletter_compliance.group_newsletter_compliance_admin"
+                            context="{'default_suppression_id': id}"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="email_normalized"/>
+                            <field name="scope"/>
+                            <field name="brand_id" invisible="scope != 'brand'"/>
+                            <field name="purpose_id" invisible="scope != 'purpose'"/>
+                            <field name="mailing_list_id" invisible="scope != 'mailing_list'"/>
+                            <field name="campaign_mailing_id" invisible="scope != 'campaign'"/>
+                            <field name="reason_id"/>
+                        </group>
+                        <group>
+                            <field name="effective_from"/>
+                            <field name="effective_until"/>
+                            <field name="source"/>
+                            <field name="evidence_attachment_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="details"/>
+                    </group>
+                    <group string="Reinstatement" invisible="not reinstated_at">
+                        <field name="reinstated_at"/>
+                        <field name="reinstated_by_id"/>
+                        <field name="reinstatement_reason"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_suppression_entry_search" model="ir.ui.view">
+        <field name="name">newsletter.suppression.entry.search</field>
+        <field name="model">newsletter.suppression.entry</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="email_normalized"/>
+                <field name="partner_id"/>
+                <field name="reason_id"/>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_global" string="Global" domain="[('scope', '=', 'global')]"/>
+                <filter name="filter_brand" string="Brand" domain="[('scope', '=', 'brand')]"/>
+                <filter name="filter_purpose" string="Purpose" domain="[('scope', '=', 'purpose')]"/>
+                <filter name="filter_mailing_list" string="Mailing List" domain="[('scope', '=', 'mailing_list')]"/>
+                <filter name="filter_campaign" string="Campaign" domain="[('scope', '=', 'campaign')]"/>
+                <separator/>
+                <filter name="filter_hard_bounce" string="Hard Bounce"
+                        domain="[('reason_id.code', '=', 'HARD_BOUNCE')]"/>
+                <filter name="filter_complaint" string="Complaint"
+                        domain="[('reason_id.category', '=', 'complaint')]"/>
+                <filter name="filter_unsubscribe" string="Unsubscribe"
+                        domain="[('reason_id.category', '=', 'unsubscribe')]"/>
+                <group>
+                    <filter name="group_by_scope" string="Scope" context="{'group_by': 'scope'}"/>
+                    <filter name="group_by_reason" string="Reason" context="{'group_by': 'reason_id'}"/>
+                    <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_suppression_entry" model="ir.actions.act_window">
+        <field name="name">All Suppressions</field>
+        <field name="res_model">newsletter.suppression.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_active': 0}</field>
+        <field name="search_view_id" ref="view_newsletter_suppression_entry_search"/>
+    </record>
+
+    <record id="action_newsletter_suppression_entry_active" model="ir.actions.act_window">
+        <field name="name">Active Suppressions</field>
+        <field name="res_model">newsletter.suppression.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('active', '=', True)]</field>
+        <field name="search_view_id" ref="view_newsletter_suppression_entry_search"/>
+    </record>
+
+    <record id="action_newsletter_suppression_entry_hard_bounce" model="ir.actions.act_window">
+        <field name="name">Hard Bounce Suppressions</field>
+        <field name="res_model">newsletter.suppression.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('reason_id.code', '=', 'HARD_BOUNCE')]</field>
+        <field name="context">{'search_default_filter_active': 0}</field>
+        <field name="search_view_id" ref="view_newsletter_suppression_entry_search"/>
+    </record>
+
+    <record id="action_newsletter_suppression_entry_complaint" model="ir.actions.act_window">
+        <field name="name">Complaint Suppressions</field>
+        <field name="res_model">newsletter.suppression.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('reason_id.category', '=', 'complaint')]</field>
+        <field name="context">{'search_default_filter_active': 0}</field>
+        <field name="search_view_id" ref="view_newsletter_suppression_entry_search"/>
+    </record>
+
+    <record id="action_newsletter_suppression_entry_unsubscribe" model="ir.actions.act_window">
+        <field name="name">Unsubscribes</field>
+        <field name="res_model">newsletter.suppression.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('reason_id.category', '=', 'unsubscribe')]</field>
+        <field name="context">{'search_default_filter_active': 0}</field>
+        <field name="search_view_id" ref="view_newsletter_suppression_entry_search"/>
+    </record>
+
+    <record id="action_newsletter_suppression_entry_reinstated" model="ir.actions.act_window">
+        <field name="name">Reinstatements</field>
+        <field name="res_model">newsletter.suppression.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('reinstated_at', '!=', False)]</field>
+        <field name="context">{'search_default_filter_active': 0}</field>
+        <field name="search_view_id" ref="view_newsletter_suppression_entry_search"/>
+    </record>
+</odoo>

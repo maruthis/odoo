@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_campaign_brand_list" model="ir.ui.view">
+        <field name="name">newsletter.campaign.brand.list</field>
+        <field name="model">newsletter.campaign.brand</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="email_from"/>
+                <field name="default_consent_purpose_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_brand_form" model="ir.ui.view">
+        <field name="name">newsletter.campaign.brand.form</field>
+        <field name="model">newsletter.campaign.brand</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="default_consent_purpose_id"/>
+                            <field name="website_url"/>
+                        </group>
+                        <group>
+                            <field name="email_from"/>
+                            <field name="reply_to"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="physical_address"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_campaign_brand" model="ir.actions.act_window">
+        <field name="name">Brands</field>
+        <field name="res_model">newsletter.campaign.brand</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

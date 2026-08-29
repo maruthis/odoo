@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_newsletter_campaign_run" model="ir.sequence">
+        <field name="name">Newsletter Campaign Run</field>
+        <field name="code">newsletter.campaign.run</field>
+        <field name="prefix">RUN-%(year)s-</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

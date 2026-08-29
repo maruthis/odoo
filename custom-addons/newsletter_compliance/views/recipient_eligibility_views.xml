@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_recipient_eligibility_list" model="ir.ui.view">
+        <field name="name">newsletter.recipient.eligibility.list</field>
+        <field name="model">newsletter.recipient.eligibility</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0"
+                  decoration-success="status == 'eligible'"
+                  decoration-muted="status == 'excluded'">
+                <field name="email_normalized" string="Email"/>
+                <field name="partner_id"/>
+                <field name="mailing_contact_id"/>
+                <field name="status"/>
+                <field name="reason_code"/>
+                <field name="consent_record_id"/>
+                <field name="suppression_entry_id"/>
+                <field name="mailing_list_id"/>
+                <field name="dispatch_state"/>
+                <field name="delivery_state"/>
+                <field name="dispatch_attempt_count"/>
+                <field name="first_sent_at"/>
+                <field name="evaluated_at"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_recipient_eligibility_form" model="ir.ui.view">
+        <field name="name">newsletter.recipient.eligibility.form</field>
+        <field name="model">newsletter.recipient.eligibility</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="campaign_run_id"/>
+                            <field name="mailing_id"/>
+                            <field name="partner_id"/>
+                            <field name="mailing_contact_id"/>
+                            <field name="email_original"/>
+                            <field name="email_normalized"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="reason_code"/>
+                            <field name="dispatch_state"/>
+                            <field name="consent_record_id"/>
+                            <field name="suppression_entry_id"/>
+                            <field name="mailing_list_id"/>
+                            <field name="duplicate_of_id"/>
+                        </group>
+                    </group>
+                    <group string="Execution">
+                        <group>
+                            <field name="delivery_state"/>
+                            <field name="dispatch_attempt_count"/>
+                            <field name="first_queued_at"/>
+                            <field name="first_sent_at"/>
+                            <field name="last_attempt_at"/>
+                            <field name="next_retry_at"/>
+                        </group>
+                        <group>
+                            <field name="provider_message_id"/>
+                            <field name="last_error_code"/>
+                            <field name="last_error_retryable"/>
+                            <field name="last_error_message"/>
+                        </group>
+                    </group>
+                    <field name="event_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="event_type"/>
+                            <field name="event_timestamp"/>
+                            <field name="attempt_number"/>
+                            <field name="error_code"/>
+                        </list>
+                    </field>
+                    <group string="Audit">
+                        <field name="evaluated_at"/>
+                        <field name="ruleset_version"/>
+                        <field name="evaluation_sequence"/>
+                        <field name="decision_hash"/>
+                        <field name="reason_detail"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_recipient_eligibility_search" model="ir.ui.view">
+        <field name="name">newsletter.recipient.eligibility.search</field>
+        <field name="model">newsletter.recipient.eligibility</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="email_normalized"/>
+                <field name="campaign_run_id"/>
+                <field name="mailing_id"/>
+                <filter name="filter_eligible" string="Eligible" domain="[('status', '=', 'eligible')]"/>
+                <filter name="filter_excluded" string="Excluded" domain="[('status', '=', 'excluded')]"/>
+                <separator/>
+                <filter name="filter_missing_consent" string="Missing Consent" domain="[('reason_code', '=', 'missing_consent')]"/>
+                <filter name="filter_withdrawn_consent" string="Withdrawn Consent" domain="[('reason_code', '=', 'withdrawn_consent')]"/>
+                <filter name="filter_expired_consent" string="Expired Consent" domain="[('reason_code', '=', 'expired_consent')]"/>
+                <filter name="filter_global_blacklist" string="Global Blacklist" domain="[('reason_code', '=', 'global_blacklist')]"/>
+                <filter name="filter_global_suppression" string="Global Suppression" domain="[('reason_code', '=', 'global_suppression')]"/>
+                <filter name="filter_purpose_suppression" string="Purpose Suppression" domain="[('reason_code', '=', 'purpose_suppression')]"/>
+                <filter name="filter_mailing_list_opt_out" string="Mailing List Opt-Out" domain="[('reason_code', '=', 'mailing_list_opt_out')]"/>
+                <filter name="filter_invalid_email" string="Invalid Email" domain="[('reason_code', 'in', ['missing_email', 'invalid_email'])]"/>
+                <filter name="filter_duplicate" string="Duplicate" domain="[('reason_code', '=', 'duplicate_email')]"/>
+                <filter name="filter_already_sent" string="Already Sent" domain="[('reason_code', '=', 'already_sent')]"/>
+                <separator/>
+                <filter name="filter_dispatch_sent" string="Sent" domain="[('dispatch_state', '=', 'sent')]"/>
+                <filter name="filter_dispatch_retry" string="Retry Pending" domain="[('dispatch_state', '=', 'retry_pending')]"/>
+                <filter name="filter_dispatch_failed" string="Dispatch Failed" domain="[('dispatch_state', '=', 'failed')]"/>
+                <filter name="filter_dispatch_blocked" string="Dispatch Blocked" domain="[('dispatch_state', '=', 'blocked')]"/>
+                <group>
+                    <filter name="group_by_reason" string="Reason" context="{'group_by': 'reason_code'}"/>
+                    <filter name="group_by_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_by_run" string="Campaign Run" context="{'group_by': 'campaign_run_id'}"/>
+                    <filter name="group_by_dispatch_state" string="Dispatch State" context="{'group_by': 'dispatch_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_recipient_eligibility" model="ir.actions.act_window">
+        <field name="name">Recipient Eligibility</field>
+        <field name="res_model">newsletter.recipient.eligibility</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_recipient_eligibility_search"/>
+    </record>
+
+    <record id="action_newsletter_recipient_eligibility_retry_pending" model="ir.actions.act_window">
+        <field name="name">Retry Pending</field>
+        <field name="res_model">newsletter.recipient.eligibility</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('dispatch_state', '=', 'retry_pending')]</field>
+        <field name="search_view_id" ref="view_newsletter_recipient_eligibility_search"/>
+    </record>
+
+    <record id="action_newsletter_recipient_eligibility_failed" model="ir.actions.act_window">
+        <field name="name">Failed Recipients</field>
+        <field name="res_model">newsletter.recipient.eligibility</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('dispatch_state', '=', 'failed')]</field>
+        <field name="search_view_id" ref="view_newsletter_recipient_eligibility_search"/>
+    </record>
+
+    <record id="action_newsletter_recipient_eligibility_blocked" model="ir.actions.act_window">
+        <field name="name">Dispatch Blocked</field>
+        <field name="res_model">newsletter.recipient.eligibility</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('dispatch_state', '=', 'blocked')]</field>
+        <field name="search_view_id" ref="view_newsletter_recipient_eligibility_search"/>
+    </record>
+</odoo>

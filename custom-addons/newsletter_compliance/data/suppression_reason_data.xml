@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="suppression_reason_unsubscribe" model="newsletter.suppression.reason">
+        <field name="code">UNSUBSCRIBE</field>
+        <field name="name">Unsubscribe</field>
+        <field name="category">unsubscribe</field>
+        <field name="default_scope">purpose</field>
+        <field name="auto_suppress" eval="True"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+
+    <record id="suppression_reason_global_opt_out" model="newsletter.suppression.reason">
+        <field name="code">GLOBAL_OPT_OUT</field>
+        <field name="name">Global Opt-Out</field>
+        <field name="category">unsubscribe</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="True"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+
+    <record id="suppression_reason_hard_bounce" model="newsletter.suppression.reason">
+        <field name="code">HARD_BOUNCE</field>
+        <field name="name">Hard Bounce</field>
+        <field name="category">bounce</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="True"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+
+    <record id="suppression_reason_soft_bounce_limit" model="newsletter.suppression.reason">
+        <field name="code">SOFT_BOUNCE_LIMIT</field>
+        <field name="name">Repeated Soft Bounce</field>
+        <field name="category">bounce</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="True"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+
+    <record id="suppression_reason_complaint" model="newsletter.suppression.reason">
+        <field name="code">COMPLAINT</field>
+        <field name="name">Spam Complaint</field>
+        <field name="category">complaint</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="True"/>
+        <field name="allow_reinstatement" eval="False"/>
+    </record>
+
+    <record id="suppression_reason_invalid_address" model="newsletter.suppression.reason">
+        <field name="code">INVALID_ADDRESS</field>
+        <field name="name">Invalid Email Address</field>
+        <field name="category">bounce</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="True"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+
+    <record id="suppression_reason_legal_hold" model="newsletter.suppression.reason">
+        <field name="code">LEGAL_HOLD</field>
+        <field name="name">Legal Restriction</field>
+        <field name="category">compliance</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="False"/>
+        <field name="allow_reinstatement" eval="False"/>
+    </record>
+
+    <record id="suppression_reason_compliance_hold" model="newsletter.suppression.reason">
+        <field name="code">COMPLIANCE_HOLD</field>
+        <field name="name">Compliance Hold</field>
+        <field name="category">compliance</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="False"/>
+        <field name="allow_reinstatement" eval="False"/>
+    </record>
+
+    <record id="suppression_reason_purpose_opt_out" model="newsletter.suppression.reason">
+        <field name="code">PURPOSE_OPT_OUT</field>
+        <field name="name">Purpose-Specific Opt-Out</field>
+        <field name="category">unsubscribe</field>
+        <field name="default_scope">purpose</field>
+        <field name="auto_suppress" eval="True"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+
+    <record id="suppression_reason_manual" model="newsletter.suppression.reason">
+        <field name="code">MANUAL</field>
+        <field name="name">Authorized Manual Suppression</field>
+        <field name="category">compliance</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="False"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+
+    <record id="suppression_reason_data_quality" model="newsletter.suppression.reason">
+        <field name="code">DATA_QUALITY</field>
+        <field name="name">Data Quality Issue</field>
+        <field name="category">bounce</field>
+        <field name="default_scope">global</field>
+        <field name="auto_suppress" eval="False"/>
+        <field name="allow_reinstatement" eval="True"/>
+    </record>
+</odoo>

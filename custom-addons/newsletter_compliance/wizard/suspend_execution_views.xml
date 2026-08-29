@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_suspend_execution_wizard_form" model="ir.ui.view">
+        <field name="name">newsletter.suspend.execution.wizard.form</field>
+        <field name="model">newsletter.suspend.execution.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="campaign_run_id" invisible="1"/>
+                    <field name="reason"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Suspend Execution"
+                            type="object" class="btn-primary"/>
+                    <button string="Close" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_suspend_execution_wizard" model="ir.actions.act_window">
+        <field name="name">Suspend Execution</field>
+        <field name="res_model">newsletter.suspend.execution.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_privacy_request_list" model="ir.ui.view">
+        <field name="name">newsletter.privacy.request.list</field>
+        <field name="model">newsletter.privacy.request</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="due_at and status != 'completed'">
+                <field name="reference"/>
+                <field name="request_type"/>
+                <field name="requester"/>
+                <field name="partner_id"/>
+                <field name="status"/>
+                <field name="received_at"/>
+                <field name="due_at"/>
+                <field name="assigned_to"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_privacy_request_form" model="ir.ui.view">
+        <field name="name">newsletter.privacy.request.form</field>
+        <field name="model">newsletter.privacy.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_verify_identity_button" type="object" string="Verify Identity"
+                            class="btn-secondary" invisible="identity_verified"/>
+                    <button name="action_run_discovery" type="object" string="Run Discovery"
+                            class="btn-secondary" invisible="status not in ('identity_verification', 'discovery')"/>
+                    <button name="%(action_newsletter_privacy_request_execute_wizard)d" type="action"
+                            string="Execute" class="btn-primary"
+                            context="{'default_privacy_request_id': id}"
+                            invisible="status not in ('decision', 'legal_review')"/>
+                    <button name="action_complete" type="object" string="Mark Completed"
+                            class="btn-primary" invisible="status != 'execution'"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Requester">
+                            <field name="request_type"/>
+                            <field name="requester"/>
+                            <field name="partner_id"/>
+                            <field name="email_normalized"/>
+                        </group>
+                        <group string="Timeline">
+                            <field name="received_at"/>
+                            <field name="due_at"/>
+                            <field name="assigned_to"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Identity">
+                            <field name="identity_verified"/>
+                            <field name="verification_method"/>
+                        </group>
+                        <group string="Decision">
+                            <field name="decision"/>
+                            <field name="decision_reason"/>
+                            <field name="completed_at" invisible="status != 'completed'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Discovery">
+                            <field name="discovery_counts" readonly="1"/>
+                            <field name="discovery_manifest" readonly="1"/>
+                        </page>
+                        <page string="Actions Taken">
+                            <field name="retention_action_ids" readonly="1">
+                                <list>
+                                    <field name="reference"/>
+                                    <field name="model_name"/>
+                                    <field name="record_reference"/>
+                                    <field name="action_type"/>
+                                    <field name="result"/>
+                                    <field name="executed_at"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_privacy_request_search" model="ir.ui.view">
+        <field name="name">newsletter.privacy.request.search</field>
+        <field name="model">newsletter.privacy.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="requester"/>
+                <field name="partner_id"/>
+                <field name="email_normalized"/>
+                <filter name="open_requests" string="Open" domain="[('status', '!=', 'completed')]"/>
+                <filter name="completed_requests" string="Completed" domain="[('status', '=', 'completed')]"/>
+                <group>
+                    <filter name="group_by_type" string="Request Type" context="{'group_by': 'request_type'}"/>
+                    <filter name="group_by_status" string="Status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_privacy_request" model="ir.actions.act_window">
+        <field name="name">Privacy Requests</field>
+        <field name="res_model">newsletter.privacy.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_privacy_request_search"/>
+        <field name="context">{'search_default_open_requests': 1}</field>
+    </record>
+</odoo>

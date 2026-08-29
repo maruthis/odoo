@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_newsletter_consent" model="ir.sequence">
+        <field name="name">Newsletter Consent Record</field>
+        <field name="code">newsletter.consent.record</field>
+        <field name="prefix">CONS-</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_newsletter_suppression" model="ir.sequence">
+        <field name="name">Newsletter Suppression Entry</field>
+        <field name="code">newsletter.suppression.entry</field>
+        <field name="prefix">SUP-</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_newsletter_compliance" model="ir.ui.view">
+        <field name="name">res.partner.form.newsletter.compliance</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_newsletter_consents" type="object"
+                        class="oe_stat_button" icon="fa-check-circle"
+                        groups="newsletter_compliance.group_newsletter_compliance_user">
+                    <field name="consent_count" widget="statinfo" string="Consents"/>
+                </button>
+                <button name="action_view_newsletter_suppressions" type="object"
+                        class="oe_stat_button" icon="fa-ban"
+                        groups="newsletter_compliance.group_newsletter_compliance_user">
+                    <field name="suppression_count" widget="statinfo" string="Suppressions"/>
+                </button>
+                <button name="action_view_newsletter_send_history" type="object"
+                        class="oe_stat_button" icon="fa-paper-plane"
+                        groups="newsletter_compliance.group_newsletter_compliance_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Send History</span>
+                    </div>
+                </button>
+                <button name="action_view_newsletter_reputation" type="object"
+                        class="oe_stat_button" icon="fa-heartbeat"
+                        groups="newsletter_compliance.group_newsletter_compliance_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Deliverability</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Newsletter Compliance" name="newsletter_compliance"
+                      groups="newsletter_compliance.group_newsletter_compliance_user">
+                    <group>
+                        <group string="Segmentation">
+                            <field name="newsletter_recipient_type"/>
+                            <field name="newsletter_segment"/>
+                            <field name="newsletter_region"/>
+                        </group>
+                    </group>
+                    <separator string="Communication Eligibility"/>
+                    <field name="newsletter_eligibility_summary" readonly="1" nolabel="1"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_newsletter_process_provider_events" model="ir.cron">
+        <field name="name">Newsletter Provider Event Processor</field>
+        <field name="model_id" ref="model_newsletter_provider_event"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process_provider_events()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_newsletter_provider_health" model="ir.cron">
+        <field name="name">Newsletter Provider Health Monitor</field>
+        <field name="model_id" ref="model_newsletter_provider_health"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_update_provider_health()</field>
+        <field name="interval_number">10</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_newsletter_finalize_outcomes" model="ir.cron">
+        <field name="name">Newsletter Campaign Outcome Finalization</field>
+        <field name="model_id" ref="model_newsletter_campaign_outcome"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_finalize_due_outcomes()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

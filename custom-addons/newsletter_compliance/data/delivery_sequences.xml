@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_newsletter_provider_event" model="ir.sequence">
+        <field name="name">Newsletter Provider Event</field>
+        <field name="code">newsletter.provider.event</field>
+        <field name="prefix">PEVT-%(year)s-</field>
+        <field name="padding">9</field>
+    </record>
+
+    <record id="seq_newsletter_compliance_alert" model="ir.sequence">
+        <field name="name">Newsletter Compliance Alert</field>
+        <field name="code">newsletter.compliance.alert</field>
+        <field name="prefix">ALRT-%(year)s-</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_campaign_outcome_list" model="ir.ui.view">
+        <field name="name">newsletter.campaign.outcome.list</field>
+        <field name="model">newsletter.campaign.outcome</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0"
+                  decoration-danger="threshold_state == 'critical'"
+                  decoration-warning="threshold_state == 'warning'">
+                <field name="reference"/>
+                <field name="mailing_id"/>
+                <field name="sent_count"/>
+                <field name="delivered_count"/>
+                <field name="soft_bounced_count"/>
+                <field name="hard_bounced_count"/>
+                <field name="complained_count"/>
+                <field name="unsubscribed_count"/>
+                <field name="threshold_state"/>
+                <field name="finalized"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_outcome_form" model="ir.ui.view">
+        <field name="name">newsletter.campaign.outcome.form</field>
+        <field name="model">newsletter.campaign.outcome</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button name="action_finalize" type="object"
+                            string="Finalize" class="btn-primary"
+                            invisible="finalized"
+                            groups="newsletter_compliance.group_newsletter_compliance_admin"/>
+                    <field name="threshold_state" widget="statusbar" statusbar_visible="healthy,warning,critical"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Finalized" bg_color="text-bg-success" invisible="not finalized"/>
+                    <group>
+                        <group>
+                            <field name="archive_id"/>
+                            <field name="campaign_run_id"/>
+                            <field name="mailing_id"/>
+                        </group>
+                        <group>
+                            <field name="finalized"/>
+                            <field name="finalized_at"/>
+                            <field name="finalized_by_id"/>
+                            <field name="outcome_hash"/>
+                        </group>
+                    </group>
+                    <group string="Delivery Outcomes">
+                        <group>
+                            <field name="sent_count"/>
+                            <field name="accepted_count"/>
+                            <field name="delivered_count"/>
+                            <field name="delivery_delayed_count"/>
+                        </group>
+                        <group>
+                            <field name="soft_bounced_count"/>
+                            <field name="hard_bounced_count"/>
+                            <field name="unknown_bounce_count"/>
+                            <field name="complained_count"/>
+                            <field name="unsubscribed_count"/>
+                            <field name="provider_rejected_count"/>
+                        </group>
+                    </group>
+                    <group string="Rates">
+                        <field name="delivery_rate" widget="percentage"/>
+                        <field name="bounce_rate" widget="percentage"/>
+                        <field name="hard_bounce_rate" widget="percentage"/>
+                        <field name="complaint_rate" widget="percentage"/>
+                        <field name="unsubscribe_rate" widget="percentage"/>
+                    </group>
+                    <group string="Observation Window">
+                        <field name="outcome_observation_started_at"/>
+                        <field name="outcome_observation_until"/>
+                    </group>
+                    <separator string="Late Adjustments"/>
+                    <field name="adjustment_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="event_type"/>
+                            <field name="recorded_at"/>
+                            <field name="provider_event_id"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_campaign_outcome" model="ir.actions.act_window">
+        <field name="name">Campaign Outcomes</field>
+        <field name="res_model">newsletter.campaign.outcome</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

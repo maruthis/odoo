@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_newsletter_compliance_campaign" model="ir.sequence">
+        <field name="name">Newsletter Compliance Campaign</field>
+        <field name="code">newsletter.compliance.campaign</field>
+        <field name="prefix">CMP-%(year)s-</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

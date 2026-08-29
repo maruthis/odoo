@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_audit_export_list" model="ir.ui.view">
+        <field name="name">newsletter.audit.export.list</field>
+        <field name="model">newsletter.audit.export</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="reference"/>
+                <field name="export_type"/>
+                <field name="campaign_run_id"/>
+                <field name="masked"/>
+                <field name="record_count"/>
+                <field name="generated_by_id"/>
+                <field name="generated_at"/>
+                <field name="expires_at"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_audit_export_form" model="ir.ui.view">
+        <field name="name">newsletter.audit.export.form</field>
+        <field name="model">newsletter.audit.export</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_download" type="object" string="Download"
+                            class="btn-primary" invisible="not attachment_id"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Export">
+                            <field name="export_type"/>
+                            <field name="campaign_run_id"/>
+                            <field name="privacy_request_id"/>
+                            <field name="masked"/>
+                            <field name="purpose"/>
+                        </group>
+                        <group string="Provenance">
+                            <field name="generated_by_id"/>
+                            <field name="generated_at"/>
+                            <field name="record_count"/>
+                            <field name="file_hash"/>
+                            <field name="download_count"/>
+                            <field name="expires_at"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_audit_export_search" model="ir.ui.view">
+        <field name="name">newsletter.audit.export.search</field>
+        <field name="model">newsletter.audit.export</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="campaign_run_id"/>
+                <field name="generated_by_id"/>
+                <filter name="masked" string="Masked" domain="[('masked', '=', True)]"/>
+                <filter name="unmasked" string="Unmasked" domain="[('masked', '=', False)]"/>
+                <group>
+                    <filter name="group_by_type" string="Export Type" context="{'group_by': 'export_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_audit_export" model="ir.actions.act_window">
+        <field name="name">Audit Exports</field>
+        <field name="res_model">newsletter.audit.export</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_audit_export_search"/>
+    </record>
+</odoo>

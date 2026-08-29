@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_compliance_dashboard_form" model="ir.ui.view">
+        <field name="name">newsletter.compliance.dashboard.form</field>
+        <field name="model">newsletter.compliance.dashboard</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <h2>Campaign Operations</h2>
+                    <div class="o_settings_container">
+                        <button name="%(action_newsletter_campaign_run_active)d" type="action" class="oe_stat_button" icon="fa-play">
+                            <field name="active_runs_count" widget="statinfo" string="Active Runs"/>
+                        </button>
+                        <button name="%(action_newsletter_recipient_eligibility_retry_pending)d" type="action" class="oe_stat_button" icon="fa-refresh">
+                            <field name="retry_pending_count" widget="statinfo" string="Retry Pending"/>
+                        </button>
+                        <button name="%(action_newsletter_recipient_eligibility_failed)d" type="action" class="oe_stat_button" icon="fa-exclamation-triangle">
+                            <field name="failed_recipients_count" widget="statinfo" string="Failed Recipients"/>
+                        </button>
+                        <button name="%(action_newsletter_campaign_run_completed)d" type="action" class="oe_stat_button" icon="fa-check">
+                            <field name="completed_today_count" widget="statinfo" string="Completed Today"/>
+                        </button>
+                    </div>
+
+                    <h2>Deliverability</h2>
+                    <div class="o_settings_container">
+                        <button name="%(action_newsletter_provider_event_hard_bounce)d" type="action" class="oe_stat_button" icon="fa-ban">
+                            <field name="new_hard_bounces_today_count" widget="statinfo" string="Hard Bounces Today"/>
+                        </button>
+                        <button name="%(action_newsletter_provider_event_complaint)d" type="action" class="oe_stat_button" icon="fa-flag">
+                            <field name="new_complaints_today_count" widget="statinfo" string="Complaints Today"/>
+                        </button>
+                    </div>
+
+                    <h2>Compliance</h2>
+                    <div class="o_settings_container">
+                        <button name="%(action_newsletter_compliance_alert)d" type="action" class="oe_stat_button" icon="fa-bell">
+                            <field name="open_alerts_count" widget="statinfo" string="Open Alerts"/>
+                        </button>
+                        <button name="%(action_newsletter_suppression_entry_active)d" type="action" class="oe_stat_button" icon="fa-ban">
+                            <field name="global_suppression_count" widget="statinfo" string="Global Suppression"/>
+                        </button>
+                        <button name="%(action_newsletter_suppression_entry_active)d" type="action" class="oe_stat_button" icon="fa-filter">
+                            <field name="purpose_suppression_count" widget="statinfo" string="Purpose Suppression"/>
+                        </button>
+                    </div>
+
+                    <h2>Privacy / Retention</h2>
+                    <div class="o_settings_container">
+                        <button name="%(action_newsletter_legal_hold)d" type="action" class="oe_stat_button" icon="fa-lock">
+                            <field name="records_on_legal_hold_count" widget="statinfo" string="Legal Holds Active"/>
+                        </button>
+                        <button name="%(action_newsletter_privacy_request)d" type="action" class="oe_stat_button" icon="fa-user-secret">
+                            <field name="privacy_requests_open_count" widget="statinfo" string="Privacy Requests Open"/>
+                        </button>
+                        <button name="%(action_newsletter_privacy_request)d" type="action" class="oe_stat_button" icon="fa-clock-o">
+                            <field name="privacy_requests_overdue_count" widget="statinfo" string="Privacy Requests Overdue"/>
+                        </button>
+                        <button name="%(action_newsletter_retention_action_exceptions)d" type="action" class="oe_stat_button" icon="fa-exclamation-circle">
+                            <field name="retention_failures_count" widget="statinfo" string="Retention Failures"/>
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_compliance_dashboard" model="ir.actions.server">
+        <field name="name">Dashboard</field>
+        <field name="model_id" ref="model_newsletter_compliance_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open()</field>
+    </record>
+</odoo>

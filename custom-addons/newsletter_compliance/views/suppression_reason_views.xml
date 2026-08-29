@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_suppression_reason_list" model="ir.ui.view">
+        <field name="name">newsletter.suppression.reason.list</field>
+        <field name="model">newsletter.suppression.reason</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category"/>
+                <field name="default_scope"/>
+                <field name="auto_suppress"/>
+                <field name="allow_reinstatement"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_suppression_reason_form" model="ir.ui.view">
+        <field name="name">newsletter.suppression.reason.form</field>
+        <field name="model">newsletter.suppression.reason</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="default_scope"/>
+                        </group>
+                        <group>
+                            <field name="auto_suppress"/>
+                            <field name="allow_reinstatement"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_suppression_reason" model="ir.actions.act_window">
+        <field name="name">Suppression Reasons</field>
+        <field name="res_model">newsletter.suppression.reason</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

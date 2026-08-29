@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_campaign_archive_list" model="ir.ui.view">
+        <field name="name">newsletter.campaign.archive.list</field>
+        <field name="model">newsletter.campaign.archive</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="reference"/>
+                <field name="campaign_compliance_id"/>
+                <field name="subject_snapshot"/>
+                <field name="targeted_count"/>
+                <field name="eligible_count"/>
+                <field name="sent_count"/>
+                <field name="failed_count"/>
+                <field name="created_at"/>
+                <field name="locked"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_archive_form" model="ir.ui.view">
+        <field name="name">newsletter.campaign.archive.form</field>
+        <field name="model">newsletter.campaign.archive</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <header>
+                    <button name="action_verify_integrity" type="object"
+                            string="Verify Integrity" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Locked" bg_color="text-bg-success" invisible="not locked"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identity">
+                            <field name="mailing_id"/>
+                            <field name="campaign_run_id"/>
+                            <field name="campaign_compliance_id"/>
+                            <field name="governance_version"/>
+                            <field name="approval_version"/>
+                            <field name="brand_id"/>
+                            <field name="consent_purpose_id"/>
+                            <field name="created_at"/>
+                            <field name="created_by_id"/>
+                        </group>
+                        <group string="Counts">
+                            <field name="targeted_count"/>
+                            <field name="eligible_count"/>
+                            <field name="excluded_count"/>
+                            <field name="sent_count"/>
+                            <field name="blocked_at_dispatch_count"/>
+                            <field name="failed_count"/>
+                            <field name="cancelled_count"/>
+                            <field name="retry_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content Snapshot">
+                            <group>
+                                <field name="subject_snapshot"/>
+                                <field name="preview_snapshot"/>
+                                <field name="email_from_snapshot"/>
+                                <field name="reply_to_snapshot"/>
+                                <field name="physical_address_snapshot"/>
+                            </group>
+                            <field name="body_html_snapshot" readonly="1"/>
+                            <separator string="Attachments"/>
+                            <field name="attachment_ids" readonly="1">
+                                <list create="0" edit="0" delete="0">
+                                    <field name="filename"/>
+                                    <field name="mimetype"/>
+                                    <field name="size"/>
+                                    <field name="checksum"/>
+                                    <field name="attachment_copy_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Audience Snapshot">
+                            <group>
+                                <field name="mailing_model_snapshot"/>
+                                <field name="mailing_domain_snapshot"/>
+                                <field name="mailing_list_snapshot"/>
+                            </group>
+                        </page>
+                        <page string="Approval Snapshot">
+                            <group>
+                                <group>
+                                    <field name="business_owner_id"/>
+                                    <field name="content_approved_by_id"/>
+                                    <field name="content_approved_at"/>
+                                    <field name="compliance_approved_by_id"/>
+                                    <field name="compliance_approved_at"/>
+                                </group>
+                                <group>
+                                    <field name="approval_content_hash"/>
+                                    <field name="preflight_result_hash"/>
+                                    <field name="ruleset_version"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Execution Snapshot">
+                            <group>
+                                <field name="execution_started_at"/>
+                                <field name="execution_completed_at"/>
+                                <field name="execution_started_by_id"/>
+                            </group>
+                        </page>
+                        <page string="Retention">
+                            <group>
+                                <field name="retention_policy_id"/>
+                                <field name="retain_until"/>
+                                <field name="legal_hold"/>
+                            </group>
+                        </page>
+                        <page string="Integrity">
+                            <group>
+                                <field name="locked"/>
+                                <field name="locked_at"/>
+                                <field name="archive_hash"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_archive_search" model="ir.ui.view">
+        <field name="name">newsletter.campaign.archive.search</field>
+        <field name="model">newsletter.campaign.archive</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="campaign_compliance_id"/>
+                <field name="mailing_id"/>
+                <group>
+                    <filter name="group_by_mailing" string="Campaign" context="{'group_by': 'mailing_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_campaign_archive" model="ir.actions.act_window">
+        <field name="name">Campaign Archives</field>
+        <field name="res_model">newsletter.campaign.archive</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_campaign_archive_search"/>
+    </record>
+</odoo>

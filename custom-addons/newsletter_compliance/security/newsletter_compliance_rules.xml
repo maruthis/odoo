@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="consent_purpose_company_rule" model="ir.rule">
+        <field name="name">Consent Purpose Company Access</field>
+        <field name="model_id" ref="model_newsletter_consent_purpose"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="consent_record_company_rule" model="ir.rule">
+        <field name="name">Consent Record Company Access</field>
+        <field name="model_id" ref="model_newsletter_consent_record"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="suppression_reason_company_rule" model="ir.rule">
+        <field name="name">Suppression Reason Company Access</field>
+        <field name="model_id" ref="model_newsletter_suppression_reason"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="suppression_entry_company_rule" model="ir.rule">
+        <field name="name">Suppression Entry Company Access</field>
+        <field name="model_id" ref="model_newsletter_suppression_entry"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="campaign_brand_company_rule" model="ir.rule">
+        <field name="name">Campaign Brand Company Access</field>
+        <field name="model_id" ref="model_newsletter_campaign_brand"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="campaign_approval_company_rule" model="ir.rule">
+        <field name="name">Campaign Approval Company Access</field>
+        <field name="model_id" ref="model_newsletter_campaign_approval"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="campaign_run_company_rule" model="ir.rule">
+        <field name="name">Campaign Run Company Access</field>
+        <field name="model_id" ref="model_newsletter_campaign_run"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="recipient_eligibility_company_rule" model="ir.rule">
+        <field name="name">Recipient Eligibility Company Access</field>
+        <field name="model_id" ref="model_newsletter_recipient_eligibility"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="send_event_company_rule" model="ir.rule">
+        <field name="name">Send Event Company Access</field>
+        <field name="model_id" ref="model_newsletter_send_event"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="campaign_archive_company_rule" model="ir.rule">
+        <field name="name">Campaign Archive Company Access</field>
+        <field name="model_id" ref="model_newsletter_campaign_archive"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="campaign_archive_attachment_company_rule" model="ir.rule">
+        <field name="name">Campaign Archive Attachment Company Access</field>
+        <field name="model_id" ref="model_newsletter_campaign_archive_attachment"/>
+        <field name="domain_force">[('archive_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="campaign_outcome_company_rule" model="ir.rule">
+        <field name="name">Campaign Outcome Company Access</field>
+        <field name="model_id" ref="model_newsletter_campaign_outcome"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="campaign_outcome_adjustment_company_rule" model="ir.rule">
+        <field name="name">Campaign Outcome Adjustment Company Access</field>
+        <field name="model_id" ref="model_newsletter_campaign_outcome_adjustment"/>
+        <field name="domain_force">[('outcome_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="provider_event_company_rule" model="ir.rule">
+        <field name="name">Provider Event Company Access</field>
+        <field name="model_id" ref="model_newsletter_provider_event"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="delivery_reputation_company_rule" model="ir.rule">
+        <field name="name">Delivery Reputation Company Access</field>
+        <field name="model_id" ref="model_newsletter_delivery_reputation"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="compliance_alert_company_rule" model="ir.rule">
+        <field name="name">Compliance Alert Company Access</field>
+        <field name="model_id" ref="model_newsletter_compliance_alert"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="provider_health_company_rule" model="ir.rule">
+        <field name="name">Provider Health Company Access</field>
+        <field name="model_id" ref="model_newsletter_provider_health"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="retention_policy_company_rule" model="ir.rule">
+        <field name="name">Retention Policy Company Access</field>
+        <field name="model_id" ref="model_newsletter_retention_policy"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="retention_action_company_rule" model="ir.rule">
+        <field name="name">Retention Action Company Access</field>
+        <field name="model_id" ref="model_newsletter_retention_action"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="legal_hold_company_rule" model="ir.rule">
+        <field name="name">Legal Hold Company Access</field>
+        <field name="model_id" ref="model_newsletter_legal_hold"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="privacy_request_company_rule" model="ir.rule">
+        <field name="name">Privacy Request Company Access</field>
+        <field name="model_id" ref="model_newsletter_privacy_request"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="audit_export_company_rule" model="ir.rule">
+        <field name="name">Audit Export Company Access</field>
+        <field name="model_id" ref="model_newsletter_audit_export"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mail_mass_mailing_form_compliance" model="ir.ui.view">
+        <field name="name">mailing.mailing.form.compliance</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_launch']" position="attributes">
+                <attribute name="invisible">state in ('in_queue', 'sending', 'done') or compliance_state != 'ready'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule']" position="attributes">
+                <attribute name="invisible">state in ('in_queue', 'sending', 'done') or compliance_state != 'ready'</attribute>
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button name="action_submit_content_review" type="object"
+                        string="Submit for Content Review" class="btn-primary"
+                        invisible="compliance_state not in ('draft', 'rejected')"
+                        groups="newsletter_compliance.group_newsletter_author,newsletter_compliance.group_newsletter_compliance_admin"/>
+                <button name="action_approve_content" type="object"
+                        string="Approve Content" class="btn-primary"
+                        invisible="compliance_state != 'content_review'"
+                        groups="newsletter_compliance.group_newsletter_content_approver,newsletter_compliance.group_newsletter_compliance_admin"/>
+                <button name="action_approve_compliance" type="object"
+                        string="Approve Compliance" class="btn-primary"
+                        invisible="compliance_state != 'compliance_review'"
+                        groups="newsletter_compliance.group_newsletter_compliance_reviewer,newsletter_compliance.group_newsletter_compliance_admin"/>
+                <button name="%(newsletter_compliance.action_newsletter_reject_campaign_wizard)d"
+                        type="action" string="Reject" class="btn-secondary"
+                        invisible="compliance_state not in ('content_review', 'compliance_review')"
+                        groups="newsletter_compliance.group_newsletter_content_approver,newsletter_compliance.group_newsletter_compliance_reviewer,newsletter_compliance.group_newsletter_compliance_admin"
+                        context="{'default_mailing_id': id}"/>
+                <button name="action_run_compliance_preflight" type="object"
+                        string="Run Compliance Preflight" class="btn-secondary"
+                        invisible="compliance_state != 'preflight_required'"
+                        groups="newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_reviewer,newsletter_compliance.group_newsletter_compliance_admin"/>
+                <button name="%(newsletter_compliance.action_newsletter_reset_campaign_wizard)d"
+                        type="action" string="Return to Draft" class="btn-secondary"
+                        invisible="compliance_state not in ('content_review', 'compliance_review', 'approved', 'preflight_required', 'rejected')"
+                        groups="newsletter_compliance.group_newsletter_content_approver,newsletter_compliance.group_newsletter_compliance_reviewer,newsletter_compliance.group_newsletter_compliance_admin"
+                        context="{'default_mailing_id': id}"/>
+                <button name="%(newsletter_compliance.action_newsletter_cancel_campaign_wizard)d"
+                        type="action" string="Cancel Campaign" class="btn-secondary"
+                        invisible="compliance_state not in ('draft', 'content_review', 'compliance_review', 'approved', 'preflight_required')"
+                        groups="newsletter_compliance.group_newsletter_author,newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"
+                        context="{'default_mailing_id': id}"/>
+                <field name="compliance_state" widget="statusbar"
+                       statusbar_visible="draft,content_review,compliance_review,approved,preflight_required,ready"/>
+            </xpath>
+
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="metadata_valid">
+                    <field name="compliance_warning"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[hasclass('oe_button_box')]" position="before">
+                <h2>
+                    <field name="compliance_campaign_id" readonly="1"/>
+                </h2>
+            </xpath>
+
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(newsletter_compliance.action_newsletter_campaign_run)d"
+                        type="action" class="oe_stat_button" icon="fa-list-alt"
+                        context="{'search_default_group_by_mailing': 0}"
+                        invisible="not campaign_run_ids">
+                    <field name="campaign_run_ids" widget="statinfo" string="Runs"/>
+                </button>
+                <button name="action_view_current_run_eligible" type="object"
+                        class="oe_stat_button" icon="fa-check-circle"
+                        invisible="not current_campaign_run_id">
+                    <field name="preflight_eligible_count" widget="statinfo" string="Eligible"/>
+                </button>
+                <button name="action_view_current_run_excluded" type="object"
+                        class="oe_stat_button" icon="fa-ban"
+                        invisible="not current_campaign_run_id">
+                    <field name="preflight_excluded_count" widget="statinfo" string="Excluded"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Preflight" name="newsletter_preflight">
+                    <group>
+                        <group string="Current Run">
+                            <field name="current_campaign_run_id" readonly="1"/>
+                            <field name="preflight_status" readonly="1"/>
+                            <field name="preflight_targeted_count" readonly="1"/>
+                            <field name="preflight_eligible_count" readonly="1"/>
+                            <field name="preflight_excluded_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <separator string="All Runs"/>
+                    <field name="campaign_run_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="reference"/>
+                            <field name="state"/>
+                            <field name="targeted_count"/>
+                            <field name="eligible_count"/>
+                            <field name="excluded_count"/>
+                            <field name="frozen"/>
+                            <field name="preflight_started_at"/>
+                            <field name="preflight_started_by_id"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Compliance" name="newsletter_compliance">
+                    <group>
+                        <group string="Campaign Governance">
+                            <field name="compliance_campaign_id" readonly="1"/>
+                            <field name="brand_id"/>
+                            <field name="consent_purpose_id"/>
+                            <field name="business_owner_id"/>
+                            <field name="compliance_owner_id"/>
+                            <field name="requires_compliance_review"/>
+                            <field name="compliance_state" readonly="1"/>
+                            <field name="preflight_status" readonly="1"/>
+                        </group>
+                        <group string="Approval">
+                            <field name="content_approved_by_id" readonly="1"/>
+                            <field name="content_approved_at" readonly="1"/>
+                            <field name="compliance_approved_by_id" readonly="1"/>
+                            <field name="compliance_approved_at" readonly="1"/>
+                            <field name="approval_version" readonly="1"/>
+                            <field name="approvals_valid" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Rejection / Cancellation" invisible="not rejected_by_id and not cancelled_by_id">
+                        <field name="rejected_by_id" readonly="1"/>
+                        <field name="rejected_at" readonly="1"/>
+                        <field name="rejection_reason" readonly="1"/>
+                        <field name="cancelled_by_id" readonly="1"/>
+                        <field name="cancelled_at" readonly="1"/>
+                        <field name="cancellation_reason" readonly="1"/>
+                    </group>
+                    <separator string="Approval History"/>
+                    <field name="approval_history_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="approval_version"/>
+                            <field name="approval_type"/>
+                            <field name="decision"/>
+                            <field name="reviewer_id"/>
+                            <field name="reviewed_at"/>
+                            <field name="comments"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mail_mass_mailing_list_compliance" model="ir.ui.view">
+        <field name="name">mailing.mailing.list.compliance</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="compliance_campaign_id" optional="show"/>
+                <field name="compliance_state" optional="show"/>
+                <field name="brand_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mail_mass_mailing_search_compliance" model="ir.ui.view">
+        <field name="name">mailing.mailing.search.compliance</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="compliance_campaign_id"/>
+                <field name="brand_id"/>
+                <field name="consent_purpose_id"/>
+                <filter name="filter_my_campaigns" string="My Campaigns"
+                        domain="[('business_owner_id', '=', uid)]"/>
+                <filter name="filter_compliance_draft" string="Draft"
+                        domain="[('compliance_state', '=', 'draft')]"/>
+                <filter name="filter_compliance_content_review" string="Awaiting Content Review"
+                        domain="[('compliance_state', '=', 'content_review')]"/>
+                <filter name="filter_compliance_review" string="Awaiting Compliance Review"
+                        domain="[('compliance_state', '=', 'compliance_review')]"/>
+                <filter name="filter_compliance_preflight" string="Preflight Required"
+                        domain="[('compliance_state', '=', 'preflight_required')]"/>
+                <filter name="filter_compliance_ready" string="Ready to Send"
+                        domain="[('compliance_state', '=', 'ready')]"/>
+                <filter name="filter_compliance_rejected" string="Rejected"
+                        domain="[('compliance_state', '=', 'rejected')]"/>
+                <group>
+                    <filter name="group_by_compliance_state" string="Compliance State" context="{'group_by': 'compliance_state'}"/>
+                    <filter name="group_by_brand" string="Brand" context="{'group_by': 'brand_id'}"/>
+                    <filter name="group_by_consent_purpose" string="Consent Purpose" context="{'group_by': 'consent_purpose_id'}"/>
+                    <filter name="group_by_campaign_owner" string="Campaign Owner" context="{'group_by': 'business_owner_id'}"/>
+                    <filter name="group_by_compliance_owner" string="Compliance Owner" context="{'group_by': 'compliance_owner_id'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_newsletter_campaign_my" model="ir.actions.act_window">
+        <field name="name">My Campaigns</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_owner_id', '=', uid), ('mailing_type', '=', 'mail')]</field>
+    </record>
+
+    <record id="action_newsletter_campaign_content_review_queue" model="ir.actions.act_window">
+        <field name="name">Content Review Queue</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('compliance_state', '=', 'content_review')]</field>
+    </record>
+
+    <record id="action_newsletter_campaign_compliance_review_queue" model="ir.actions.act_window">
+        <field name="name">Compliance Review Queue</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('compliance_state', '=', 'compliance_review')]</field>
+    </record>
+
+    <record id="action_newsletter_campaign_preflight_required" model="ir.actions.act_window">
+        <field name="name">Preflight Required</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('compliance_state', '=', 'preflight_required')]</field>
+    </record>
+
+    <record id="action_newsletter_campaign_ready" model="ir.actions.act_window">
+        <field name="name">Ready to Send</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('compliance_state', '=', 'ready')]</field>
+    </record>
+
+    <record id="action_newsletter_campaign_rejected" model="ir.actions.act_window">
+        <field name="name">Rejected</field>
+        <field name="res_model">mailing.mailing</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('compliance_state', '=', 'rejected')]</field>
+    </record>
+</odoo>

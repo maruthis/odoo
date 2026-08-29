@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_legal_hold_list" model="ir.ui.view">
+        <field name="name">newsletter.legal.hold.list</field>
+        <field name="model">newsletter.legal.hold</field>
+        <field name="arch" type="xml">
+            <list decoration-success="status == 'active'" decoration-muted="status == 'released'">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="scope_type"/>
+                <field name="status"/>
+                <field name="owner_id"/>
+                <field name="start_at"/>
+                <field name="released_at"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_legal_hold_form" model="ir.ui.view">
+        <field name="name">newsletter.legal.hold.form</field>
+        <field name="model">newsletter.legal.hold</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(action_newsletter_legal_hold_release_wizard)d" type="action"
+                            string="Release Hold" class="btn-primary"
+                            context="{'default_legal_hold_id': id}"
+                            invisible="status != 'active'"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Hold name"/>
+                        </h1>
+                        <h3>
+                            <field name="reference" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Ownership">
+                            <field name="owner_id"/>
+                            <field name="approved_by_id"/>
+                            <field name="legal_reference"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Timing">
+                            <field name="start_at"/>
+                            <field name="released_at" invisible="status != 'released'"/>
+                            <field name="released_by_id" invisible="status != 'released'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason"/>
+                        <field name="release_reason" invisible="status != 'released'"/>
+                    </group>
+                    <group string="Scope">
+                        <field name="scope_type"/>
+                        <field name="scope_mailing_ids" widget="many2many_tags"
+                               invisible="scope_type != 'campaign'"/>
+                        <field name="scope_campaign_run_ids" widget="many2many_tags"
+                               invisible="scope_type != 'campaign_run'"/>
+                        <field name="scope_partner_ids" widget="many2many_tags"
+                               invisible="scope_type != 'recipient'"/>
+                        <field name="scope_date_from" invisible="scope_type != 'date_range'"/>
+                        <field name="scope_date_until" invisible="scope_type != 'date_range'"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_legal_hold_search" model="ir.ui.view">
+        <field name="name">newsletter.legal.hold.search</field>
+        <field name="model">newsletter.legal.hold</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="owner_id"/>
+                <filter name="active_holds" string="Active" domain="[('status', '=', 'active')]"/>
+                <filter name="released_holds" string="Released" domain="[('status', '=', 'released')]"/>
+                <group>
+                    <filter name="group_by_scope_type" string="Scope Type" context="{'group_by': 'scope_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_legal_hold" model="ir.actions.act_window">
+        <field name="name">Legal Holds</field>
+        <field name="res_model">newsletter.legal.hold</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_legal_hold_search"/>
+        <field name="context">{'search_default_active_holds': 1}</field>
+    </record>
+</odoo>

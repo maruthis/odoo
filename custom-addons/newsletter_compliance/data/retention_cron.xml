@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_newsletter_process_retention" model="ir.cron">
+        <field name="name">Newsletter Retention Processor</field>
+        <field name="model_id" ref="model_newsletter_retention_policy"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process_retention()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_newsletter_expire_audit_exports" model="ir.cron">
+        <field name="name">Newsletter Audit Export Expiry</field>
+        <field name="model_id" ref="model_newsletter_audit_export"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_expire_audit_exports()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

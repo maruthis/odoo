@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_newsletter_send_event" model="ir.sequence">
+        <field name="name">Newsletter Send Event</field>
+        <field name="code">newsletter.send.event</field>
+        <field name="prefix">EVT-%(year)s-</field>
+        <field name="padding">9</field>
+    </record>
+
+    <record id="seq_newsletter_campaign_archive" model="ir.sequence">
+        <field name="name">Newsletter Campaign Archive</field>
+        <field name="code">newsletter.campaign.archive</field>
+        <field name="prefix">ARC-%(year)s-</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_newsletter_campaign_outcome" model="ir.sequence">
+        <field name="name">Newsletter Campaign Outcome</field>
+        <field name="code">newsletter.campaign.outcome</field>
+        <field name="prefix">OUT-%(year)s-</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

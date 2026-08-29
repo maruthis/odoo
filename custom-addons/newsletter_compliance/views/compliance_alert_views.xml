@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_compliance_alert_list" model="ir.ui.view">
+        <field name="name">newsletter.compliance.alert.list</field>
+        <field name="model">newsletter.compliance.alert</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0"
+                  decoration-danger="severity == 'critical' and status != 'resolved'"
+                  decoration-warning="severity == 'warning' and status != 'resolved'"
+                  decoration-muted="status == 'resolved'">
+                <field name="reference"/>
+                <field name="alert_type"/>
+                <field name="severity"/>
+                <field name="campaign_run_id"/>
+                <field name="metric_name"/>
+                <field name="metric_value"/>
+                <field name="threshold_value"/>
+                <field name="status"/>
+                <field name="raised_at"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_compliance_alert_form" model="ir.ui.view">
+        <field name="name">newsletter.compliance.alert.form</field>
+        <field name="model">newsletter.compliance.alert</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button name="action_acknowledge" type="object"
+                            string="Acknowledge" class="btn-primary"
+                            invisible="status != 'open'"
+                            groups="newsletter_compliance.group_newsletter_compliance_reviewer,newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"/>
+                    <button name="action_resolve" type="object"
+                            string="Resolve" class="btn-secondary"
+                            invisible="status == 'resolved'"
+                            groups="newsletter_compliance.group_newsletter_compliance_reviewer,newsletter_compliance.group_newsletter_campaign_operator,newsletter_compliance.group_newsletter_compliance_admin"/>
+                    <field name="status" widget="statusbar" statusbar_visible="open,acknowledged,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="alert_type"/>
+                            <field name="severity"/>
+                            <field name="campaign_run_id"/>
+                            <field name="provider"/>
+                            <field name="raised_at"/>
+                        </group>
+                        <group>
+                            <field name="metric_name"/>
+                            <field name="metric_value"/>
+                            <field name="threshold_value"/>
+                            <field name="assigned_to"/>
+                        </group>
+                    </group>
+                    <group string="Resolution" invisible="status == 'open'">
+                        <field name="acknowledged_at"/>
+                        <field name="acknowledged_by_id"/>
+                        <field name="resolved_at"/>
+                        <field name="resolved_by_id"/>
+                        <field name="resolution_notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_compliance_alert_search" model="ir.ui.view">
+        <field name="name">newsletter.compliance.alert.search</field>
+        <field name="model">newsletter.compliance.alert</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="campaign_run_id"/>
+                <filter name="filter_open" string="Open" domain="[('status', '=', 'open')]"/>
+                <filter name="filter_acknowledged" string="Acknowledged" domain="[('status', '=', 'acknowledged')]"/>
+                <filter name="filter_resolved" string="Resolved" domain="[('status', '=', 'resolved')]"/>
+                <filter name="filter_critical" string="Critical" domain="[('severity', '=', 'critical')]"/>
+                <group>
+                    <filter name="group_by_type" string="Alert Type" context="{'group_by': 'alert_type'}"/>
+                    <filter name="group_by_severity" string="Severity" context="{'group_by': 'severity'}"/>
+                    <filter name="group_by_status" string="Status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_compliance_alert" model="ir.actions.act_window">
+        <field name="name">Active Alerts</field>
+        <field name="res_model">newsletter.compliance.alert</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '!=', 'resolved')]</field>
+        <field name="search_view_id" ref="view_newsletter_compliance_alert_search"/>
+    </record>
+</odoo>

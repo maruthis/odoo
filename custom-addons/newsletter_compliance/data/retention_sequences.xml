@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_newsletter_retention_action" model="ir.sequence">
+        <field name="name">Newsletter Retention Action</field>
+        <field name="code">newsletter.retention.action</field>
+        <field name="prefix">RET-</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_newsletter_legal_hold" model="ir.sequence">
+        <field name="name">Newsletter Legal Hold</field>
+        <field name="code">newsletter.legal.hold</field>
+        <field name="prefix">HOLD-</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_newsletter_privacy_request" model="ir.sequence">
+        <field name="name">Newsletter Privacy Request</field>
+        <field name="code">newsletter.privacy.request</field>
+        <field name="prefix">DSR-</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_newsletter_audit_export" model="ir.sequence">
+        <field name="name">Newsletter Audit Export</field>
+        <field name="code">newsletter.audit.export</field>
+        <field name="prefix">AEXP-</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

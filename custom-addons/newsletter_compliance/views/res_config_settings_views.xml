@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_newsletter" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.newsletter</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="Newsletter Deliverability"
+                     string="Newsletter Deliverability" data-key="newsletter_compliance"
+                     groups="newsletter_compliance.group_newsletter_compliance_admin,newsletter_compliance.group_newsletter_operations_admin">
+                    <h2>Reputation Policy</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_soft_bounce_threshold" string="Soft Bounce Threshold"/>
+                                <field name="newsletter_soft_bounce_threshold"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_soft_bounce_window_days" string="Soft Bounce Window (days)"/>
+                                <field name="newsletter_soft_bounce_window_days"/>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Alert Thresholds</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_bounce_warning_rate" string="Bounce Warning Rate"/>
+                                <field name="newsletter_bounce_warning_rate"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_bounce_critical_rate" string="Bounce Critical Rate"/>
+                                <field name="newsletter_bounce_critical_rate"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_complaint_warning_rate" string="Complaint Warning Rate"/>
+                                <field name="newsletter_complaint_warning_rate"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_complaint_critical_rate" string="Complaint Critical Rate"/>
+                                <field name="newsletter_complaint_critical_rate"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_unsubscribe_warning_rate" string="Unsubscribe Warning Rate"/>
+                                <field name="newsletter_unsubscribe_warning_rate"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <field name="newsletter_auto_suspend_on_critical"/>
+                                <label for="newsletter_auto_suspend_on_critical" string="Auto-Suspend on Critical Threshold"/>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Delivery Provider</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_generic_provider_secret" string="Generic Provider Webhook Secret"/>
+                                <field name="newsletter_generic_provider_secret" password="True"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_outcome_finalization_window_hours" string="Outcome Finalization Window (hours)"/>
+                                <field name="newsletter_outcome_finalization_window_hours"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_event_processing_retry_limit" string="Event Processing Retry Limit"/>
+                                <field name="newsletter_event_processing_retry_limit"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_smtp_bounce_relay_secret" string="SMTP Bounce Relay Secret"/>
+                                <field name="newsletter_smtp_bounce_relay_secret" password="True"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_ses_sns_topic_arn" string="SES SNS Topic ARN"/>
+                                <field name="newsletter_ses_sns_topic_arn"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_sendgrid_webhook_public_key" string="SendGrid Webhook Public Key"/>
+                                <field name="newsletter_sendgrid_webhook_public_key"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_mailgun_signing_key" string="Mailgun Webhook Signing Key"/>
+                                <field name="newsletter_mailgun_signing_key" password="True"/>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Preflight</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_minimum_eligible_recipient_count" string="Minimum Eligible Recipients"/>
+                                <field name="newsletter_minimum_eligible_recipient_count"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_max_preflight_age_minutes" string="Maximum Preflight Age (minutes)"/>
+                                <field name="newsletter_max_preflight_age_minutes"/>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Dispatch</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_dispatch_batch_size" string="Dispatch Batch Size"/>
+                                <field name="newsletter_dispatch_batch_size"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_maximum_retry_count" string="Maximum Retry Count"/>
+                                <field name="newsletter_maximum_retry_count"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_base_retry_delay_seconds" string="Base Retry Delay (seconds)"/>
+                                <field name="newsletter_base_retry_delay_seconds"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_maximum_retry_delay_seconds" string="Maximum Retry Delay (seconds)"/>
+                                <field name="newsletter_maximum_retry_delay_seconds"/>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Retention</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_retention_batch_size" string="Retention Batch Size"/>
+                                <field name="newsletter_retention_batch_size"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <field name="newsletter_retention_dry_run_default"/>
+                                <label for="newsletter_retention_dry_run_default" string="New Retention Policies Default to Dry-Run"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="newsletter_audit_export_expiry_days" string="Audit Export Availability (days)"/>
+                                <field name="newsletter_audit_export_expiry_days"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_newsletter_deliverability_settings" model="ir.actions.act_window">
+        <field name="name">Delivery &amp; Reputation Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'newsletter_compliance'}</field>
+    </record>
+</odoo>

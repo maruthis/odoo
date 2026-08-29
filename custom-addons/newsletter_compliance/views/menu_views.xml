@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_newsletter_compliance_root"
+              name="Compliance"
+              parent="mass_mailing.mass_mailing_menu_root"
+              sequence="50"
+              groups="newsletter_compliance.group_newsletter_compliance_user"/>
+
+    <menuitem id="menu_newsletter_dashboard"
+              name="Dashboard"
+              parent="menu_newsletter_compliance_root"
+              action="action_newsletter_compliance_dashboard"
+              sequence="1"/>
+
+    <!-- Campaign Governance -->
+    <menuitem id="menu_newsletter_campaign_governance"
+              name="Campaign Governance"
+              parent="menu_newsletter_compliance_root"
+              sequence="5"/>
+
+    <menuitem id="menu_newsletter_campaign_my"
+              name="My Campaigns"
+              parent="menu_newsletter_campaign_governance"
+              action="newsletter_compliance.action_newsletter_campaign_my"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_campaign_content_review_queue"
+              name="Content Review Queue"
+              parent="menu_newsletter_campaign_governance"
+              action="newsletter_compliance.action_newsletter_campaign_content_review_queue"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_campaign_compliance_review_queue"
+              name="Compliance Review Queue"
+              parent="menu_newsletter_campaign_governance"
+              action="newsletter_compliance.action_newsletter_campaign_compliance_review_queue"
+              sequence="30"/>
+
+    <menuitem id="menu_newsletter_campaign_preflight_required"
+              name="Preflight Required"
+              parent="menu_newsletter_campaign_governance"
+              action="newsletter_compliance.action_newsletter_campaign_preflight_required"
+              sequence="40"/>
+
+    <menuitem id="menu_newsletter_campaign_ready"
+              name="Ready to Send"
+              parent="menu_newsletter_campaign_governance"
+              action="newsletter_compliance.action_newsletter_campaign_ready"
+              sequence="50"/>
+
+    <menuitem id="menu_newsletter_campaign_rejected"
+              name="Rejected"
+              parent="menu_newsletter_campaign_governance"
+              action="newsletter_compliance.action_newsletter_campaign_rejected"
+              sequence="60"/>
+
+    <menuitem id="menu_newsletter_campaign_approval_history"
+              name="Approval History"
+              parent="menu_newsletter_campaign_governance"
+              action="action_newsletter_campaign_approval"
+              sequence="70"/>
+
+    <!-- Execution -->
+    <menuitem id="menu_newsletter_execution"
+              name="Execution"
+              parent="menu_newsletter_compliance_root"
+              sequence="6"/>
+
+    <menuitem id="menu_newsletter_execution_active_runs"
+              name="Active Runs"
+              parent="menu_newsletter_execution"
+              action="action_newsletter_campaign_run_active"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_execution_retry_pending"
+              name="Retry Pending"
+              parent="menu_newsletter_execution"
+              action="action_newsletter_recipient_eligibility_retry_pending"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_execution_failed"
+              name="Failed Recipients"
+              parent="menu_newsletter_execution"
+              action="action_newsletter_recipient_eligibility_failed"
+              sequence="30"/>
+
+    <menuitem id="menu_newsletter_execution_blocked"
+              name="Dispatch Blocked"
+              parent="menu_newsletter_execution"
+              action="action_newsletter_recipient_eligibility_blocked"
+              sequence="40"/>
+
+    <menuitem id="menu_newsletter_execution_completed_runs"
+              name="Completed Runs"
+              parent="menu_newsletter_execution"
+              action="action_newsletter_campaign_run_completed"
+              sequence="50"/>
+
+    <!-- Deliverability -->
+    <menuitem id="menu_newsletter_deliverability"
+              name="Deliverability"
+              parent="menu_newsletter_compliance_root"
+              sequence="8"/>
+
+    <menuitem id="menu_newsletter_deliverability_outcomes"
+              name="Campaign Outcomes"
+              parent="menu_newsletter_deliverability"
+              action="action_newsletter_campaign_outcome"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_deliverability_events"
+              name="Delivery Events"
+              parent="menu_newsletter_deliverability"
+              action="action_newsletter_provider_event"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_deliverability_soft_bounces"
+              name="Soft Bounces"
+              parent="menu_newsletter_deliverability"
+              action="action_newsletter_provider_event_soft_bounce"
+              sequence="30"/>
+
+    <menuitem id="menu_newsletter_deliverability_hard_bounces"
+              name="Hard Bounces"
+              parent="menu_newsletter_deliverability"
+              action="action_newsletter_provider_event_hard_bounce"
+              sequence="40"/>
+
+    <menuitem id="menu_newsletter_deliverability_complaints"
+              name="Complaints"
+              parent="menu_newsletter_deliverability"
+              action="action_newsletter_provider_event_complaint"
+              sequence="50"/>
+
+    <menuitem id="menu_newsletter_deliverability_reputation"
+              name="Recipient Reputation"
+              parent="menu_newsletter_deliverability"
+              action="action_newsletter_delivery_reputation"
+              sequence="60"/>
+
+    <menuitem id="menu_newsletter_deliverability_provider_health"
+              name="Provider Health"
+              parent="menu_newsletter_deliverability"
+              action="action_newsletter_provider_health"
+              sequence="70"/>
+
+    <!-- Monitoring -->
+    <menuitem id="menu_newsletter_monitoring"
+              name="Monitoring"
+              parent="menu_newsletter_compliance_root"
+              sequence="9"/>
+
+    <menuitem id="menu_newsletter_monitoring_alerts"
+              name="Active Alerts"
+              parent="menu_newsletter_monitoring"
+              action="action_newsletter_compliance_alert"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_monitoring_backlog"
+              name="Provider Event Backlog"
+              parent="menu_newsletter_monitoring"
+              action="action_newsletter_provider_event_backlog"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_monitoring_unmatched"
+              name="Unmatched Events"
+              parent="menu_newsletter_monitoring"
+              action="action_newsletter_provider_event_unmatched"
+              sequence="30"/>
+
+    <!-- Audit -->
+    <menuitem id="menu_newsletter_audit"
+              name="Audit"
+              parent="menu_newsletter_compliance_root"
+              sequence="7"/>
+
+    <menuitem id="menu_newsletter_audit_campaign_run"
+              name="Campaign Runs"
+              parent="menu_newsletter_audit"
+              action="action_newsletter_campaign_run"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_audit_recipient_eligibility"
+              name="Recipient Decisions"
+              parent="menu_newsletter_audit"
+              action="action_newsletter_recipient_eligibility"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_audit_send_events"
+              name="Send Events"
+              parent="menu_newsletter_audit"
+              action="action_newsletter_send_event"
+              sequence="30"/>
+
+    <menuitem id="menu_newsletter_audit_campaign_archives"
+              name="Campaign Archives"
+              parent="menu_newsletter_audit"
+              action="action_newsletter_campaign_archive"
+              sequence="40"/>
+
+    <menuitem id="menu_newsletter_audit_campaign_outcomes"
+              name="Campaign Outcomes"
+              parent="menu_newsletter_audit"
+              action="action_newsletter_campaign_outcome"
+              sequence="50"/>
+
+    <menuitem id="menu_newsletter_audit_exports"
+              name="Audit Exports"
+              parent="menu_newsletter_audit"
+              action="action_newsletter_audit_export"
+              sequence="60"/>
+
+    <menuitem id="menu_newsletter_audit_integrity_verification"
+              name="Integrity Verification"
+              parent="menu_newsletter_audit"
+              action="action_newsletter_campaign_archive"
+              sequence="70"/>
+
+    <!-- Privacy & Retention -->
+    <menuitem id="menu_newsletter_privacy_retention"
+              name="Privacy &amp; Retention"
+              parent="menu_newsletter_compliance_root"
+              sequence="15"/>
+
+    <menuitem id="menu_newsletter_privacy_requests"
+              name="Privacy Requests"
+              parent="menu_newsletter_privacy_retention"
+              action="action_newsletter_privacy_request"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_retention_policies"
+              name="Retention Policies"
+              parent="menu_newsletter_privacy_retention"
+              action="action_newsletter_retention_policy"
+              sequence="20"
+              groups="newsletter_compliance.group_newsletter_compliance_admin,newsletter_compliance.group_newsletter_privacy_officer"/>
+
+    <menuitem id="menu_newsletter_retention_action_ledger"
+              name="Retention Action Ledger"
+              parent="menu_newsletter_privacy_retention"
+              action="action_newsletter_retention_action"
+              sequence="30"/>
+
+    <menuitem id="menu_newsletter_retention_exceptions"
+              name="Retention Exceptions"
+              parent="menu_newsletter_privacy_retention"
+              action="action_newsletter_retention_action_exceptions"
+              sequence="40"/>
+
+    <menuitem id="menu_newsletter_legal_holds"
+              name="Legal Holds"
+              parent="menu_newsletter_privacy_retention"
+              action="action_newsletter_legal_hold"
+              sequence="50"/>
+
+    <!-- Consent -->
+    <menuitem id="menu_newsletter_compliance_consent"
+              name="Consent"
+              parent="menu_newsletter_compliance_root"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_consent_record"
+              name="Consent Records"
+              parent="menu_newsletter_compliance_consent"
+              action="action_newsletter_consent_record"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_consent_record_active"
+              name="Active Consents"
+              parent="menu_newsletter_compliance_consent"
+              action="action_newsletter_consent_record_active"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_consent_record_withdrawn"
+              name="Withdrawn Consents"
+              parent="menu_newsletter_compliance_consent"
+              action="action_newsletter_consent_record_withdrawn"
+              sequence="30"/>
+
+    <menuitem id="menu_newsletter_consent_purpose"
+              name="Consent Purposes"
+              parent="menu_newsletter_compliance_consent"
+              action="action_newsletter_consent_purpose"
+              sequence="40"
+              groups="newsletter_compliance.group_newsletter_compliance_admin"/>
+
+    <!-- Suppression -->
+    <menuitem id="menu_newsletter_compliance_suppression"
+              name="Suppression"
+              parent="menu_newsletter_compliance_root"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_suppression_entry_active"
+              name="Active Suppressions"
+              parent="menu_newsletter_compliance_suppression"
+              action="action_newsletter_suppression_entry_active"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_suppression_entry"
+              name="All Suppressions"
+              parent="menu_newsletter_compliance_suppression"
+              action="action_newsletter_suppression_entry"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_suppression_reason"
+              name="Suppression Reasons"
+              parent="menu_newsletter_compliance_suppression"
+              action="action_newsletter_suppression_reason"
+              sequence="30"
+              groups="newsletter_compliance.group_newsletter_compliance_admin"/>
+
+    <menuitem id="menu_newsletter_suppression_hard_bounce"
+              name="Hard Bounce Suppressions"
+              parent="menu_newsletter_compliance_suppression"
+              action="action_newsletter_suppression_entry_hard_bounce"
+              sequence="40"/>
+
+    <menuitem id="menu_newsletter_suppression_complaint"
+              name="Complaint Suppressions"
+              parent="menu_newsletter_compliance_suppression"
+              action="action_newsletter_suppression_entry_complaint"
+              sequence="50"/>
+
+    <menuitem id="menu_newsletter_suppression_unsubscribe"
+              name="Unsubscribes"
+              parent="menu_newsletter_compliance_suppression"
+              action="action_newsletter_suppression_entry_unsubscribe"
+              sequence="60"/>
+
+    <menuitem id="menu_newsletter_suppression_reinstated"
+              name="Reinstatements"
+              parent="menu_newsletter_compliance_suppression"
+              action="action_newsletter_suppression_entry_reinstated"
+              sequence="70"/>
+
+    <!-- Configuration -->
+    <menuitem id="menu_newsletter_compliance_configuration"
+              name="Configuration"
+              parent="menu_newsletter_compliance_root"
+              sequence="90"
+              groups="newsletter_compliance.group_newsletter_compliance_admin,newsletter_compliance.group_newsletter_operations_admin"/>
+
+    <menuitem id="menu_newsletter_compliance_configuration_purpose"
+              name="Consent Purposes"
+              parent="menu_newsletter_compliance_configuration"
+              action="action_newsletter_consent_purpose"
+              sequence="10"/>
+
+    <menuitem id="menu_newsletter_compliance_configuration_reason"
+              name="Suppression Reasons"
+              parent="menu_newsletter_compliance_configuration"
+              action="action_newsletter_suppression_reason"
+              sequence="20"/>
+
+    <menuitem id="menu_newsletter_compliance_configuration_brand"
+              name="Brands"
+              parent="menu_newsletter_compliance_configuration"
+              action="action_newsletter_campaign_brand"
+              sequence="30"/>
+
+    <menuitem id="menu_newsletter_compliance_configuration_delivery"
+              name="Delivery &amp; Reputation"
+              parent="menu_newsletter_compliance_configuration"
+              action="action_newsletter_deliverability_settings"
+              sequence="40"/>
+</odoo>

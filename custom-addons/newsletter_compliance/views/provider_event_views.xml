@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_provider_event_list" model="ir.ui.view">
+        <field name="name">newsletter.provider.event.list</field>
+        <field name="model">newsletter.provider.event</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0"
+                  decoration-danger="processing_state in ('failed', 'unmatched')"
+                  decoration-warning="processing_state == 'retry_pending'"
+                  decoration-success="processing_state == 'processed'">
+                <field name="reference"/>
+                <field name="provider"/>
+                <field name="canonical_event_type"/>
+                <field name="canonical_email"/>
+                <field name="provider_message_id"/>
+                <field name="processing_state"/>
+                <field name="processing_attempts"/>
+                <field name="received_at"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_provider_event_form" model="ir.ui.view">
+        <field name="name">newsletter.provider.event.form</field>
+        <field name="model">newsletter.provider.event</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="provider"/>
+                            <field name="provider_event_id"/>
+                            <field name="provider_message_id"/>
+                            <field name="canonical_event_type"/>
+                            <field name="canonical_email"/>
+                        </group>
+                        <group>
+                            <field name="processing_state"/>
+                            <field name="processing_attempts"/>
+                            <field name="next_retry_at"/>
+                            <field name="received_at"/>
+                            <field name="event_timestamp"/>
+                        </group>
+                    </group>
+                    <group string="Bounce Detail" invisible="not bounce_type">
+                        <field name="bounce_type"/>
+                        <field name="bounce_subtype"/>
+                        <field name="smtp_status"/>
+                        <field name="diagnostic_code"/>
+                    </group>
+                    <group string="Correlation">
+                        <field name="campaign_run_id"/>
+                        <field name="eligibility_id"/>
+                        <field name="send_event_id"/>
+                    </group>
+                    <group string="Error" invisible="not error_message">
+                        <field name="error_message"/>
+                    </group>
+                    <group string="Raw Payload" groups="newsletter_compliance.group_newsletter_compliance_admin">
+                        <field name="payload_hash"/>
+                        <field name="raw_payload" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_provider_event_search" model="ir.ui.view">
+        <field name="name">newsletter.provider.event.search</field>
+        <field name="model">newsletter.provider.event</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="canonical_email"/>
+                <field name="provider_message_id"/>
+                <field name="provider"/>
+                <filter name="filter_unmatched" string="Unmatched" domain="[('processing_state', '=', 'unmatched')]"/>
+                <filter name="filter_failed" string="Failed" domain="[('processing_state', '=', 'failed')]"/>
+                <filter name="filter_retry_pending" string="Retry Pending" domain="[('processing_state', '=', 'retry_pending')]"/>
+                <filter name="filter_soft_bounce" string="Soft Bounces" domain="[('canonical_event_type', '=', 'soft_bounce')]"/>
+                <filter name="filter_hard_bounce" string="Hard Bounces" domain="[('canonical_event_type', '=', 'hard_bounce')]"/>
+                <filter name="filter_complaint" string="Complaints" domain="[('canonical_event_type', '=', 'complaint')]"/>
+                <group>
+                    <filter name="group_by_provider" string="Provider" context="{'group_by': 'provider'}"/>
+                    <filter name="group_by_state" string="Processing State" context="{'group_by': 'processing_state'}"/>
+                    <filter name="group_by_event_type" string="Event Type" context="{'group_by': 'canonical_event_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_provider_event" model="ir.actions.act_window">
+        <field name="name">Delivery Events</field>
+        <field name="res_model">newsletter.provider.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_provider_event_search"/>
+    </record>
+
+    <record id="action_newsletter_provider_event_soft_bounce" model="ir.actions.act_window">
+        <field name="name">Soft Bounces</field>
+        <field name="res_model">newsletter.provider.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('canonical_event_type', '=', 'soft_bounce')]</field>
+        <field name="search_view_id" ref="view_newsletter_provider_event_search"/>
+    </record>
+
+    <record id="action_newsletter_provider_event_hard_bounce" model="ir.actions.act_window">
+        <field name="name">Hard Bounces</field>
+        <field name="res_model">newsletter.provider.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('canonical_event_type', '=', 'hard_bounce')]</field>
+        <field name="search_view_id" ref="view_newsletter_provider_event_search"/>
+    </record>
+
+    <record id="action_newsletter_provider_event_complaint" model="ir.actions.act_window">
+        <field name="name">Complaints</field>
+        <field name="res_model">newsletter.provider.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('canonical_event_type', '=', 'complaint')]</field>
+        <field name="search_view_id" ref="view_newsletter_provider_event_search"/>
+    </record>
+
+    <record id="action_newsletter_provider_event_backlog" model="ir.actions.act_window">
+        <field name="name">Provider Event Backlog</field>
+        <field name="res_model">newsletter.provider.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('processing_state', 'in', ['received', 'validated', 'retry_pending'])]</field>
+        <field name="search_view_id" ref="view_newsletter_provider_event_search"/>
+    </record>
+
+    <record id="action_newsletter_provider_event_unmatched" model="ir.actions.act_window">
+        <field name="name">Unmatched Events</field>
+        <field name="res_model">newsletter.provider.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('processing_state', '=', 'unmatched')]</field>
+        <field name="search_view_id" ref="view_newsletter_provider_event_search"/>
+    </record>
+</odoo>

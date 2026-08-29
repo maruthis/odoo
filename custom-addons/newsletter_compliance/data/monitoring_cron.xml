@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_newsletter_integrity_verifier" model="ir.cron">
+        <field name="name">Newsletter Integrity Verifier</field>
+        <field name="model_id" ref="model_newsletter_campaign_run"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_verify_integrity()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_newsletter_retention_exception_monitor" model="ir.cron">
+        <field name="name">Newsletter Retention Exception Monitor</field>
+        <field name="model_id" ref="model_newsletter_retention_action"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_monitor_retention_failures()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_newsletter_privacy_request_overdue_monitor" model="ir.cron">
+        <field name="name">Newsletter Privacy Request Overdue Monitor</field>
+        <field name="model_id" ref="model_newsletter_privacy_request"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_monitor_overdue_requests()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_consent_purpose_list" model="ir.ui.view">
+        <field name="name">newsletter.consent.purpose.list</field>
+        <field name="model">newsletter.consent.purpose</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="requires_explicit_consent"/>
+                <field name="privacy_notice_version"/>
+                <field name="retention_days"/>
+                <field name="public_subscribe"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_consent_purpose_form" model="ir.ui.view">
+        <field name="name">newsletter.consent.purpose.form</field>
+        <field name="model">newsletter.consent.purpose</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="requires_explicit_consent"/>
+                            <field name="privacy_notice_version"/>
+                        </group>
+                        <group>
+                            <field name="retention_days"/>
+                            <field name="public_subscribe"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Describe the communication purpose..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_consent_purpose" model="ir.actions.act_window">
+        <field name="name">Consent Purposes</field>
+        <field name="res_model">newsletter.consent.purpose</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

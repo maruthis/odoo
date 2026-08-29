@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Illustrative seed policies for the three data categories the R6
+         automated retention processor actually wires up
+         (retention_service.MODEL_BY_CATEGORY). All ship with dry_run=True
+         so nothing mutates data until an administrator reviews and
+         disables dry-run explicitly (R6 section 34). -->
+
+    <record id="retention_policy_provider_raw_event" model="newsletter.retention.policy">
+        <field name="name">Provider Raw Event Payloads</field>
+        <field name="code">PROVIDER_RAW_EVENT_90D</field>
+        <field name="data_category">provider_raw_event</field>
+        <field name="retention_period_days">90</field>
+        <field name="retention_trigger">record_created</field>
+        <field name="expiry_action">purge_payload</field>
+        <field name="legal_hold_allowed">True</field>
+        <field name="pseudonymize_before_delete">False</field>
+        <field name="minimum_evidence_fields">provider, event_type, canonical fields, campaign_run_id</field>
+        <field name="dry_run">True</field>
+    </record>
+
+    <record id="retention_policy_suppression_history" model="newsletter.retention.policy">
+        <field name="name">Suppression Entry Identity</field>
+        <field name="code">SUPPRESSION_HISTORY_730D</field>
+        <field name="data_category">suppression_history</field>
+        <field name="retention_period_days">730</field>
+        <field name="retention_trigger">record_created</field>
+        <field name="expiry_action">pseudonymize</field>
+        <field name="legal_hold_allowed">True</field>
+        <field name="pseudonymize_before_delete">True</field>
+        <field name="minimum_evidence_fields">scope, reason, email_hash, effective_from</field>
+        <field name="dry_run">True</field>
+    </record>
+
+    <record id="retention_policy_recipient_eligibility" model="newsletter.retention.policy">
+        <field name="name">Recipient Eligibility Decisions</field>
+        <field name="code">RECIPIENT_ELIGIBILITY_365D</field>
+        <field name="data_category">recipient_eligibility</field>
+        <field name="retention_period_days">365</field>
+        <field name="retention_trigger">record_created</field>
+        <field name="expiry_action">pseudonymize</field>
+        <field name="legal_hold_allowed">True</field>
+        <field name="pseudonymize_before_delete">True</field>
+        <field name="minimum_evidence_fields">decision, decision_reason, campaign_run_id</field>
+        <field name="dry_run">True</field>
+    </record>
+</odoo>

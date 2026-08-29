@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_provider_health_list" model="ir.ui.view">
+        <field name="name">newsletter.provider.health.list</field>
+        <field name="model">newsletter.provider.health</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0"
+                  decoration-danger="state == 'unavailable'"
+                  decoration-warning="state == 'degraded'"
+                  decoration-success="state == 'healthy'">
+                <field name="provider"/>
+                <field name="state"/>
+                <field name="last_event_received_at"/>
+                <field name="webhook_backlog_count"/>
+                <field name="unmatched_events_count"/>
+                <field name="event_processing_failures"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_provider_health_form" model="ir.ui.view">
+        <field name="name">newsletter.provider.health.form</field>
+        <field name="model">newsletter.provider.health</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="provider" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="state"/>
+                        <field name="last_event_received_at"/>
+                        <field name="last_successful_send_at"/>
+                        <field name="webhook_backlog_count"/>
+                        <field name="event_processing_failures"/>
+                        <field name="unmatched_events_count"/>
+                        <field name="avg_callback_latency_seconds"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_provider_health" model="ir.actions.act_window">
+        <field name="name">Provider Health</field>
+        <field name="res_model">newsletter.provider.health</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

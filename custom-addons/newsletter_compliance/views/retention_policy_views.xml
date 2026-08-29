@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_retention_policy_list" model="ir.ui.view">
+        <field name="name">newsletter.retention.policy.list</field>
+        <field name="model">newsletter.retention.policy</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="data_category"/>
+                <field name="retention_period_days"/>
+                <field name="retention_trigger"/>
+                <field name="expiry_action"/>
+                <field name="dry_run"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_retention_policy_form" model="ir.ui.view">
+        <field name="name">newsletter.retention.policy.form</field>
+        <field name="model">newsletter.retention.policy</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(action_newsletter_retention_preview_wizard)d" type="action"
+                            string="Preview Impact" class="btn-secondary"
+                            context="{'default_policy_id': id}"/>
+                    <button name="%(action_newsletter_manual_retention_wizard)d" type="action"
+                            string="Run Now (Two-Person Control)" class="btn-secondary"
+                            context="{'default_policy_id': id}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Policy name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Scope">
+                            <field name="code"/>
+                            <field name="data_category"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Timing">
+                            <field name="retention_period_days"/>
+                            <field name="retention_trigger"/>
+                            <field name="expiry_action"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Safety">
+                            <field name="legal_hold_allowed"/>
+                            <field name="pseudonymize_before_delete"/>
+                            <field name="dry_run"/>
+                            <field name="batch_size"/>
+                        </group>
+                        <group string="Evidence">
+                            <field name="minimum_evidence_fields"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_retention_policy_search" model="ir.ui.view">
+        <field name="name">newsletter.retention.policy.search</field>
+        <field name="model">newsletter.retention.policy</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="data_category"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="dry_run" string="Dry-Run" domain="[('dry_run', '=', True)]"/>
+                <group>
+                    <filter name="group_by_category" string="Data Category" context="{'group_by': 'data_category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_retention_policy" model="ir.actions.act_window">
+        <field name="name">Retention Policies</field>
+        <field name="res_model">newsletter.retention.policy</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_retention_policy_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

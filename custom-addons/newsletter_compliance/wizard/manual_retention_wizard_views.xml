@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_manual_retention_wizard_form" model="ir.ui.view">
+        <field name="name">newsletter.manual.retention.wizard.form</field>
+        <field name="model">newsletter.manual.retention.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="policy_id" invisible="1"/>
+                    <field name="prepared_by_id"/>
+                    <field name="approved_by_id"/>
+                    <field name="reason"/>
+                </group>
+                <footer>
+                    <button name="action_execute" string="Run Retention"
+                            type="object" class="btn-primary"/>
+                    <button string="Close" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_newsletter_manual_retention_wizard" model="ir.actions.act_window">
+        <field name="name">Manual Retention Run</field>
+        <field name="res_model">newsletter.manual.retention.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

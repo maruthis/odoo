@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_consent_record_list" model="ir.ui.view">
+        <field name="name">newsletter.consent.record.list</field>
+        <field name="model">newsletter.consent.record</field>
+        <field name="arch" type="xml">
+            <list decoration-success="status == 'active'"
+                  decoration-muted="status in ('withdrawn', 'expired', 'superseded')"
+                  decoration-warning="status == 'pending'">
+                <field name="reference"/>
+                <field name="partner_id"/>
+                <field name="email"/>
+                <field name="purpose_id"/>
+                <field name="status"/>
+                <field name="given_at"/>
+                <field name="expires_at"/>
+                <field name="source"/>
+                <field name="privacy_notice_version"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_consent_record_form" model="ir.ui.view">
+        <field name="name">newsletter.consent.record.form</field>
+        <field name="model">newsletter.consent.record</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(newsletter_compliance.action_newsletter_withdraw_consent_wizard)d"
+                            string="Withdraw Consent"
+                            type="action"
+                            class="btn-primary"
+                            invisible="status != 'active'"
+                            context="{'default_consent_id': id}"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="pending,active,withdrawn"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="email"/>
+                            <field name="purpose_id"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Consent Evidence">
+                            <group>
+                                <group>
+                                    <field name="given_at"/>
+                                    <field name="source"/>
+                                    <field name="channel"/>
+                                    <field name="privacy_notice_version"/>
+                                </group>
+                                <group>
+                                    <field name="source_reference"/>
+                                    <field name="evidence_attachment_id"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="consent_text"/>
+                            </group>
+                        </page>
+                        <page string="Lifecycle">
+                            <group>
+                                <group>
+                                    <field name="expires_at"/>
+                                    <field name="supersedes_id"/>
+                                </group>
+                                <group>
+                                    <field name="withdrawn_at"/>
+                                    <field name="withdrawal_source"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="withdrawal_reason"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_consent_record_search" model="ir.ui.view">
+        <field name="name">newsletter.consent.record.search</field>
+        <field name="model">newsletter.consent.record</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="partner_id"/>
+                <field name="email"/>
+                <field name="purpose_id"/>
+                <field name="source"/>
+                <filter name="filter_active" string="Active" domain="[('status', '=', 'active')]"/>
+                <filter name="filter_pending" string="Pending" domain="[('status', '=', 'pending')]"/>
+                <filter name="filter_withdrawn" string="Withdrawn" domain="[('status', '=', 'withdrawn')]"/>
+                <filter name="filter_expired" string="Expired" domain="[('status', '=', 'expired')]"/>
+                <separator/>
+                <filter name="filter_expires_this_month" string="Expires This Month"
+                        domain="[('expires_at', '&gt;=', context_today().strftime('%Y-%m-01')),
+                                 ('expires_at', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <group>
+                    <filter name="group_by_purpose" string="Purpose" context="{'group_by': 'purpose_id'}"/>
+                    <filter name="group_by_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_by_source" string="Source" context="{'group_by': 'source'}"/>
+                    <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_consent_record" model="ir.actions.act_window">
+        <field name="name">Consent Records</field>
+        <field name="res_model">newsletter.consent.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_consent_record_search"/>
+    </record>
+
+    <record id="action_newsletter_consent_record_active" model="ir.actions.act_window">
+        <field name="name">Active Consents</field>
+        <field name="res_model">newsletter.consent.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '=', 'active')]</field>
+        <field name="search_view_id" ref="view_newsletter_consent_record_search"/>
+    </record>
+
+    <record id="action_newsletter_consent_record_withdrawn" model="ir.actions.act_window">
+        <field name="name">Withdrawn Consents</field>
+        <field name="res_model">newsletter.consent.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '=', 'withdrawn')]</field>
+        <field name="search_view_id" ref="view_newsletter_consent_record_search"/>
+    </record>
+</odoo>

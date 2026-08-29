@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_campaign_approval_list" model="ir.ui.view">
+        <field name="name">newsletter.campaign.approval.list</field>
+        <field name="model">newsletter.campaign.approval</field>
+        <field name="arch" type="xml">
+            <list decoration-success="decision == 'approved'"
+                  decoration-danger="decision in ('rejected', 'invalidated')"
+                  create="0" edit="0" delete="0">
+                <field name="mailing_id"/>
+                <field name="approval_version"/>
+                <field name="approval_type"/>
+                <field name="decision"/>
+                <field name="reviewer_id"/>
+                <field name="reviewed_at"/>
+                <field name="subject_snapshot"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_approval_form" model="ir.ui.view">
+        <field name="name">newsletter.campaign.approval.form</field>
+        <field name="model">newsletter.campaign.approval</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="mailing_id"/>
+                            <field name="approval_version"/>
+                            <field name="approval_type"/>
+                            <field name="decision"/>
+                        </group>
+                        <group>
+                            <field name="reviewer_id"/>
+                            <field name="reviewed_at"/>
+                            <field name="brand_id"/>
+                            <field name="consent_purpose_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="subject_snapshot"/>
+                        <field name="recipient_snapshot"/>
+                        <field name="content_hash"/>
+                        <field name="comments"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_campaign_approval_search" model="ir.ui.view">
+        <field name="name">newsletter.campaign.approval.search</field>
+        <field name="model">newsletter.campaign.approval</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="mailing_id"/>
+                <field name="reviewer_id"/>
+                <filter name="filter_approved" string="Approved" domain="[('decision', '=', 'approved')]"/>
+                <filter name="filter_rejected" string="Rejected" domain="[('decision', '=', 'rejected')]"/>
+                <filter name="filter_invalidated" string="Invalidated" domain="[('decision', '=', 'invalidated')]"/>
+                <group>
+                    <filter name="group_by_mailing" string="Campaign" context="{'group_by': 'mailing_id'}"/>
+                    <filter name="group_by_type" string="Approval Type" context="{'group_by': 'approval_type'}"/>
+                    <filter name="group_by_decision" string="Decision" context="{'group_by': 'decision'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_campaign_approval" model="ir.actions.act_window">
+        <field name="name">Approval History</field>
+        <field name="res_model">newsletter.campaign.approval</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_campaign_approval_search"/>
+    </record>
+</odoo>

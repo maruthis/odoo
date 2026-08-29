@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_newsletter_send_event_list" model="ir.ui.view">
+        <field name="name">newsletter.send.event.list</field>
+        <field name="model">newsletter.send.event</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0"
+                  decoration-success="event_type in ('send_accepted', 'delivered')"
+                  decoration-danger="event_type in ('send_failed', 'send_failed_final', 'hard_bounce', 'complaint', 'dispatch_recheck_blocked')"
+                  decoration-warning="event_type in ('retry_scheduled', 'soft_bounce', 'delayed')">
+                <field name="reference"/>
+                <field name="campaign_run_id"/>
+                <field name="email_normalized"/>
+                <field name="event_type"/>
+                <field name="event_timestamp"/>
+                <field name="attempt_number"/>
+                <field name="source"/>
+                <field name="error_code"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_newsletter_send_event_form" model="ir.ui.view">
+        <field name="name">newsletter.send.event.form</field>
+        <field name="model">newsletter.send.event</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="reference" readonly="1"/>
+                            <field name="campaign_run_id"/>
+                            <field name="mailing_id"/>
+                            <field name="eligibility_id"/>
+                            <field name="email_normalized"/>
+                            <field name="event_type"/>
+                        </group>
+                        <group>
+                            <field name="event_timestamp"/>
+                            <field name="attempt_number"/>
+                            <field name="source"/>
+                            <field name="correlation_id"/>
+                            <field name="provider_message_id"/>
+                            <field name="provider_event_id"/>
+                        </group>
+                    </group>
+                    <group string="Error" invisible="not error_code and not error_message">
+                        <field name="error_code"/>
+                        <field name="error_message"/>
+                    </group>
+                    <group string="Integrity">
+                        <field name="payload_hash"/>
+                        <field name="previous_event_hash"/>
+                        <field name="event_hash"/>
+                    </group>
+                    <group string="Raw Payload" invisible="not raw_payload">
+                        <field name="raw_payload" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_newsletter_send_event_search" model="ir.ui.view">
+        <field name="name">newsletter.send.event.search</field>
+        <field name="model">newsletter.send.event</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="email_normalized"/>
+                <field name="campaign_run_id"/>
+                <field name="correlation_id"/>
+                <filter name="filter_failures" string="Failures"
+                        domain="[('event_type', 'in', ['send_failed', 'send_failed_final'])]"/>
+                <filter name="filter_blocked" string="Dispatch Blocked"
+                        domain="[('event_type', '=', 'dispatch_recheck_blocked')]"/>
+                <filter name="filter_retries" string="Retries"
+                        domain="[('event_type', 'in', ['retry_scheduled', 'retry_started'])]"/>
+                <group>
+                    <filter name="group_by_run" string="Campaign Run" context="{'group_by': 'campaign_run_id'}"/>
+                    <filter name="group_by_type" string="Event Type" context="{'group_by': 'event_type'}"/>
+                    <filter name="group_by_email" string="Email" context="{'group_by': 'email_normalized'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_newsletter_send_event" model="ir.actions.act_window">
+        <field name="name">Send Events</field>
+        <field name="res_model">newsletter.send.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_newsletter_send_event_search"/>
+    </record>
+</odoo>
