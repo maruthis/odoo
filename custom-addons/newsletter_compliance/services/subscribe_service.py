@@ -74,6 +74,29 @@ def submit_request(env, email, first_name, last_name, purpose_ids):
     return partner, records, token
 
 
+def _get_default_email_from(env):
+    """This flow has no mailing/brand to pull a sender from (a subscriber
+    can select purposes spanning several brands) - without an explicit
+    email_from, mail.mail.send() raises "mail_from_missing" and the
+    confirmation email never even attempts to go out. Same priority chain
+    Odoo itself favors: the configured default-from/catchall-domain ICPs,
+    then the company's own address, then whichever outgoing mail server
+    is actually configured - guaranteed deliverable through it since it's
+    the one Odoo will use to send this very message.
+    """
+    icp = env["ir.config_parameter"].sudo()
+    default_from = icp.get_param("mail.default.from")
+    catchall_domain = icp.get_param("mail.catchall.domain")
+    if default_from and catchall_domain:
+        return f"{default_from}@{catchall_domain}"
+
+    if env.company.email:
+        return env.company.email
+
+    mail_server = env["ir.mail_server"].sudo().search([], limit=1)
+    return mail_server.smtp_user or False
+
+
 def _send_confirmation_email(env, partner, records, token):
     base_url = env["ir.config_parameter"].sudo().get_param("web.base.url") or ""
     confirm_url = f"{base_url}/newsletter-compliance/subscribe/confirm/{token}"
@@ -89,6 +112,7 @@ def _send_confirmation_email(env, partner, records, token):
                 "<p>If you did not request this, you can ignore this email - "
                 "nothing is sent to you until you confirm.</p>"
             ),
+            "email_from": _get_default_email_from(env),
             "email_to": partner.email,
             "auto_delete": True,
         }
