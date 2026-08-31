@@ -9,6 +9,7 @@ from . import test_preflight_workflow
 from . import test_send_enforcement
 from . import test_frozen_population
 from . import test_dispatch
+from . import test_click_tracking
 from . import test_retry
 from . import test_resumability
 from . import test_reconciliation

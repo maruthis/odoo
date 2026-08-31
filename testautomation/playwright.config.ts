@@ -92,5 +92,10 @@ export default defineConfig({
       testMatch: "10-end-to-end-lifecycle.spec.ts",
       use: { ...devices["Desktop Chrome"] }, // this spec switches contexts/storage state per role itself
     },
+    {
+      name: "clickTracking",
+      testMatch: "11-click-tracking.spec.ts",
+      use: { ...devices["Desktop Chrome"], storageState: path.join(AUTH_DIR, "operator.json") },
+    },
   ],
 });

@@ -359,7 +359,13 @@ class NewsletterCampaignRun(models.Model):
                 "execution_started_by_id": self.env.user.id,
             }
         )
-        self.mailing_id.write({"compliance_state": "sending"})
+        # mass_mailing's own "Opened"/"Clicked"/"Replied"/... stat buttons
+        # on the mailing form are gated on its native state field (not our
+        # compliance_state) via invisible="state in ('draft', 'test')" -
+        # this module otherwise never touches that field, which would
+        # leave those buttons permanently invisible even once real
+        # tracking data exists.
+        self.mailing_id.write({"compliance_state": "sending", "state": "sending"})
 
         # Created now (not at completion) so bounce/complaint rates can be
         # monitored and alerted on while the campaign is still sending
@@ -799,7 +805,7 @@ class NewsletterCampaignRun(models.Model):
                 "execution_completed_at": fields.Datetime.now(),
             }
         )
-        self.mailing_id.write({"compliance_state": "completed"})
+        self.mailing_id.write({"compliance_state": "completed", "state": "done"})
 
         total_retries = sum(e.dispatch_attempt_count - 1 for e in self.eligibility_ids if e.dispatch_attempt_count > 1)
         self.mailing_id.message_post(
