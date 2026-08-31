@@ -5,6 +5,37 @@
 [![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
 [![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
 
+## Bulk Email Compliance Solution (this workspace)
+
+This checkout also carries a compliant bulk-email platform for MedhAnkura and Techsophy, built entirely on **Odoo 19 Community Edition** — no separate integration stack, no additional infrastructure.
+
+**How the solution is assembled:**
+
+| Layer | Source | Role |
+|---|---|---|
+| Campaign creation & sending | Odoo CE's stock **Email Marketing** app (`addons/mass_mailing`) | Content authoring, recipient lists, the native mailing send/queue engine |
+| Compliance governance | `custom-addons/newsletter_compliance/` (our module) | Consent & suppression, approval workflow, preflight eligibility, execution ledger & immutable archive, delivery feedback/monitoring, privacy & retention lifecycle |
+
+The custom module extends `mass_mailing.mailing` rather than replacing it — every campaign is still an ordinary Odoo mailing; `newsletter_compliance` adds a parallel `compliance_state` that gates whether it's allowed to send, plus the models, screens, and audit trail described below.
+
+**What it delivers**, built in six phases (see `mydocs/Custom Module R1.md`–`R6.md`):
+
+1. **Foundation** — consent records, consent purposes, and a suppression register (bounce/complaint/unsubscribe/manual).
+2. **Campaign Governance** — content-review and compliance-review approval chain before anything can send.
+3. **Preflight & Eligibility** — the recipient list is checked against consent and suppression, then frozen.
+4. **Execution & Archive** — throttled, resumable sending with a locked, tamper-evident archive of every campaign as sent.
+5. **Delivery Feedback & Monitoring** — an authenticated webhook ingests bounce/complaint events and auto-suppresses affected addresses, with threshold alerts.
+6. **Privacy & Retention** — data subject access/erasure requests, configurable retention policies, and legal holds.
+
+**Where to look:**
+
+- `custom-addons/newsletter_compliance/` — the module itself (models, views, security, services, tests).
+- `testautomation/` — a Playwright E2E suite (42 tests across all 9 roles) plus a demo-recording suite (`npm run demo`) that produces one video per role and one full R1–R6 walkthrough.
+- `mydocs/` — the business requirements, the R1–R6 design docs, and `mydocs/user guide/Newsletter Compliance User Guide.html`, a role-based, screenshot-illustrated guide for every role from Newsletter Author through Compliance Audit Reviewer.
+- `run.sh` / `docker-compose.yml` / `odoo.dev.conf` — local dev server setup (Postgres via Docker, then `./run.sh` to launch Odoo).
+
+---
+
 Odoo is a suite of web based open source business apps.
 
 The main Odoo Apps include an [Open Source CRM](https://www.odoo.com/page/crm),
